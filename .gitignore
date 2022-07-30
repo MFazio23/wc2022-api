@@ -143,3 +143,4 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,kotlin,gradle
+/src/main/resources/wc2022-7a7c9-firebase-adminsdk-*.json
