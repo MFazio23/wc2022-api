@@ -1,0 +1,59 @@
+val fazioUtilsVersion: String by project
+val firebaseVersion: String by project
+val ktorVersion: String by project
+val kotlinVersion: String by project
+val logbackVersion: String by project
+
+plugins {
+    application
+    id("war")
+    kotlin("jvm") version "1.7.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.10"
+    id("org.gretty") version "3.0.6"
+}
+
+group = "dev.mfazio.wc2022"
+version = "0.0.1"
+application {
+    mainClass.set("dev.mfazio.wc2022.ApplicationKt")
+
+    val isDevelopment: Boolean = project.ext.has("development")
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
+
+repositories {
+    mavenCentral()
+    maven { url = uri("https://jitpack.io") }
+}
+
+dependencies {
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("com.google.firebase:firebase-admin:$firebaseVersion")
+    implementation("com.github.MFazio23:fazio-utils-jvm:$fazioUtilsVersion")
+    implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-auth-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-locations-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-host-common-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-compression-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-cors-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-metrics-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-servlet:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-tomcat-jvm:$ktorVersion")
+    testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+}
+
+gretty {
+    servletContainer = "tomcat9"
+    contextPath = "/"
+    logbackConfigFile = "src/main/resources/logback.xml"
+}
+
+afterEvaluate {
+    tasks.getByName("run") {
+        dependsOn("appRun")
+    }
+}

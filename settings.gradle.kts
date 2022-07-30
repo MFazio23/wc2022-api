@@ -1,0 +1,1 @@
+rootProject.name = "wc2022-api"
