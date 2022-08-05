@@ -16,5 +16,8 @@ fun Application.configureSerialization() {
         get("/json/kotlinx-serialization") {
             call.respond(mapOf("hello" to "world-wc2022-war"))
         }
+        get("/json/uri") {
+            call.respond(mapOf("Request URI" to call.request.host()))
+        }
     }
 }
