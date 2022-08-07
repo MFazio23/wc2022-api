@@ -1,26 +1,23 @@
 package dev.mfazio.wc2022
 
-import io.ktor.server.engine.*
-import io.ktor.server.tomcat.*
-import dev.mfazio.wc2022.plugins.*
+import dev.mfazio.wc2022.plugins.configureEnvConfig
+import dev.mfazio.wc2022.plugins.configureHTTP
+import dev.mfazio.wc2022.plugins.configureMonitoring
+import dev.mfazio.wc2022.plugins.configureSecurity
+import dev.mfazio.wc2022.routing.configureRouting
 import io.ktor.server.application.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.server.tomcat.*
 
-fun main() {
-    embeddedServer(Tomcat, port = 8080, host = "0.0.0.0") {
-        configureSecurity()
-        configureHTTP()
-        configureMonitoring()
-        configureSerialization()
-        configureRouting()
-    }.start(wait = true)
-}
+fun main(args: Array<String>): Unit = EngineMain.main(args)
 
 fun Application.module() {
+    configureApp()
+}
+
+private fun Application.configureApp() {
+    configureEnvConfig()
     configureSecurity()
     configureHTTP()
     configureMonitoring()
-    configureSerialization()
     configureRouting()
 }
