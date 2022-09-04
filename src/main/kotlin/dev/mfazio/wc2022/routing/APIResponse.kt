@@ -9,6 +9,6 @@ data class APIResponse<T>(
     val error: String? = null,
 ) {
     companion object {
-        val notYetImplemented = APIResponse<Void>(message = "Not yet implmented")
+        val notYetImplemented = APIResponse<String>(message = "Not yet implemented")
     }
 }

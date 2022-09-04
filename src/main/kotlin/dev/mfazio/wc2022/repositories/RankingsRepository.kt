@@ -6,17 +6,16 @@ import dev.mfazio.wc2022.services.RankingsService
 import dev.mfazio.wc2022.types.RankedTeam
 
 object RankingsRepository {
-    suspend fun getExternalTeamRankings(): List<RankedTeam> = RankingsService.getExternalRankings()?.mapToRankedTeams() ?: emptyList()
+    suspend fun getExternalTeamRankings(): List<RankedTeam> =
+        RankingsService.getExternalRankings()?.mapToRankedTeams() ?: emptyList()
 
-    suspend fun updatedRankedTeams(): List<RankedTeam> {
+    suspend fun getTeamRankings(): List<RankedTeam> {
+        val firebaseRankings = RankingsService.getRankingsFromDB()
 
-        return getExternalTeamRankings().also {
-            FirebaseService.saveRankingsToFirebase(it)
-        }
-        /*val rankedTeams = getRankedTeams()
+        return firebaseRankings?.mapToRankedTeams() ?: emptyList()
+    }
 
-        FirebaseService.saveRankingsToFirebase(rankedTeams)
-
-        return rankedTeams*/
+    suspend fun updatedRankedTeams(): List<RankedTeam> = getExternalTeamRankings().also {
+        FirebaseService.saveRankingsToFirebase(it)
     }
 }

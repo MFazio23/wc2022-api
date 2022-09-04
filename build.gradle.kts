@@ -39,20 +39,21 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-server-auth-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-locations-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-host-common-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-compression-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-cors-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-host-common-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-metrics-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-resources-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-servlet:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
     implementation("io.ktor:ktor-server-tomcat-jvm:$ktorVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$kotlinxCoroutinesVersion")
+
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$kotlinxCoroutinesVersion")
 }
 
 gretty {

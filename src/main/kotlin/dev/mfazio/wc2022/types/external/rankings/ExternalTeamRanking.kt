@@ -1,4 +1,4 @@
-package dev.mfazio.wc2022.types.external
+package dev.mfazio.wc2022.types.external.rankings
 
 import kotlinx.serialization.Serializable
 
