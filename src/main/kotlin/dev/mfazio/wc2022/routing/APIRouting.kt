@@ -1,6 +1,8 @@
 package dev.mfazio.wc2022.routing
 
 import dev.mfazio.wc2022.URLs
+import dev.mfazio.wc2022.auth.FirebaseAuthName
+import dev.mfazio.wc2022.auth.FirebaseAuthUser
 import dev.mfazio.wc2022.repositories.RankingsRepository
 import dev.mfazio.wc2022.repositories.ScheduleRepository
 import dev.mfazio.wc2022.types.api.RankedTeamApiModel
@@ -8,6 +10,7 @@ import dev.mfazio.wc2022.types.api.ScheduledMatchApiModel
 import dev.mfazio.wc2022.types.api.TeamApiModel
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
@@ -43,7 +46,7 @@ fun Application.configureRouting() {
         }
         route("/party") {
             get {
-                //TODO: Get parties for user
+                //TODO: Get parties for user. User ID should be a query parameter
                 call.respond(APIResponse.notYetImplemented)
             }
             post {
@@ -105,15 +108,39 @@ fun Application.configureRouting() {
                 val schedule = ScheduleRepository.updateSchedule()
                 call.respond(schedule.map(ScheduledMatchApiModel.Companion::fromScheduledMatch).sortedBy { it.dateTime })
             }
-            get("{date}") {
-                //TODO: update to pull from DB
-                val date = LocalDate.parse(call.parameters["date"], DateTimeFormatter.ISO_LOCAL_DATE)
-                val scheduledMatches = ScheduleRepository.getExternalScheduleForDate(date)
-                call.respond(
-                    APIResponse(
-                        data = scheduledMatches
+            route("{date}") {
+                get {
+                    //TODO: update to pull from DB
+                    val date = LocalDate.parse(call.parameters["date"], DateTimeFormatter.ISO_LOCAL_DATE)
+                    val scheduledMatches = ScheduleRepository.getExternalScheduleForDate(date)
+                    call.respond(
+                        APIResponse(
+                            data = scheduledMatches
+                        )
                     )
-                )
+                }
+                put {
+                    //TODO: Update a single day
+                    call.respond(
+                        APIResponse.notYetImplemented
+                    )
+                }
+            }
+
+        }
+
+        route("auth-test") {
+            get("open") {
+                call.respondText { "Open" }
+            }
+            authenticate(FirebaseAuthName) {
+                get("closed") {
+                    call.respond(
+                        APIResponse(
+                            data = call.principal<FirebaseAuthUser>()
+                        )
+                    )
+                }
             }
         }
     }
