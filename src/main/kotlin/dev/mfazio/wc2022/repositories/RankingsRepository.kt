@@ -16,6 +16,6 @@ object RankingsRepository {
     }
 
     suspend fun updatedRankedTeams(): List<RankedTeam> = getExternalTeamRankings().also {
-        FirebaseService.saveRankingsToFirebase(it)
+        RankingsService.saveRankingsToFirebase(it)
     }
 }

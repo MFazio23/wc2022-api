@@ -25,6 +25,6 @@ object ScheduleRepository {
         ScheduleService.getExternalScheduleForDate(date)?.mapToScheduledMatches()
 
     suspend fun updateSchedule(): List<ScheduledMatch> = getExternalSchedule().also {
-        FirebaseService.saveScheduleToFirebase(it)
+        ScheduleService.saveScheduleToFirebase(it)
     }
 }

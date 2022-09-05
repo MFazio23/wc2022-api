@@ -6,10 +6,6 @@ import com.google.firebase.FirebaseOptions
 import com.google.firebase.database.*
 import dev.mfazio.utils.extensions.getResourceAsStream
 import dev.mfazio.wc2022.URLs
-import dev.mfazio.wc2022.types.RankedTeam
-import dev.mfazio.wc2022.types.ScheduledMatch
-import dev.mfazio.wc2022.types.db.RankedTeamDbModel
-import dev.mfazio.wc2022.types.db.ScheduledMatchDbModel
 
 object FirebaseService {
     //TODO: Move this to an env variable or something.
@@ -20,7 +16,7 @@ object FirebaseService {
         .setDatabaseUrl(URLs.dbUrl)
         .build()
 
-    private val db: FirebaseDatabase
+    val db: FirebaseDatabase
 
     init {
         FirebaseApp.initializeApp(firebaseOptions)
@@ -30,15 +26,4 @@ object FirebaseService {
 
     fun getJsonUrlFromPath(path: String) = "${URLs.dbUrl}$path.json"
 
-    fun saveRankingsToFirebase(rankedTeams: List<RankedTeam>) {
-        db
-            .getReference("/rankings")
-            .setValueAsync(rankedTeams.associate(RankedTeamDbModel.Companion::fromRankedTeam))
-    }
-
-    fun saveScheduleToFirebase(scheduledMatches: List<ScheduledMatch>) {
-        db
-            .getReference("/schedule")
-            .setValueAsync(scheduledMatches.associate(ScheduledMatchDbModel.Companion::fromScheduledMatch))
-    }
 }
