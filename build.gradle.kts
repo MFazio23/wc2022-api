@@ -1,5 +1,6 @@
 val fazioUtilsVersion: String by project
 val firebaseVersion: String by project
+val kompendiumVersion: String by project
 val ktorVersion: String by project
 val ktorEnvConfigVersion: String by project
 val kotlinVersion: String by project
@@ -36,6 +37,7 @@ dependencies {
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
     implementation("com.github.MFazio23:fazio-utils-jvm:$fazioUtilsVersion")
     implementation("de.sharpmind.ktor:ktor-env-config:$ktorEnvConfigVersion")
+    implementation("io.bkbn:kompendium-core:$kompendiumVersion")
     implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
@@ -67,5 +69,10 @@ gretty {
 afterEvaluate {
     tasks.getByName("run") {
         dependsOn("appRun")
+    }
+}
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }

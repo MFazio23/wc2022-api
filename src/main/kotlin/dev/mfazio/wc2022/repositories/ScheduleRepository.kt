@@ -5,6 +5,7 @@ import dev.mfazio.wc2022.services.ScheduleService
 import dev.mfazio.wc2022.types.ScheduledMatch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.streams.toList
 
 object ScheduleRepository {
     private const val startDateString = "2022-11-20"
