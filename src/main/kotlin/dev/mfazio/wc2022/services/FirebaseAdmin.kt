@@ -7,10 +7,10 @@ import com.google.firebase.database.*
 import dev.mfazio.utils.extensions.getResourceAsStream
 import dev.mfazio.wc2022.URLs
 
-object FirebaseService {
+object FirebaseAdmin {
     //TODO: Move this to an env variable or something.
     private const val firebaseAuthFileName = "wc2022-7a7c9-firebase-adminsdk-o3wd8-b65d3f7269.json"
-    private val firebaseAuthFileStream = FirebaseService::class.getResourceAsStream(firebaseAuthFileName)
+    private val firebaseAuthFileStream = FirebaseAdmin::class.getResourceAsStream(firebaseAuthFileName)
     private val firebaseOptions = FirebaseOptions.builder()
         .setCredentials(GoogleCredentials.fromStream(firebaseAuthFileStream))
         .setDatabaseUrl(URLs.dbUrl)
@@ -25,5 +25,4 @@ object FirebaseService {
     }
 
     fun getJsonUrlFromPath(path: String) = "${URLs.dbUrl}$path.json"
-
 }

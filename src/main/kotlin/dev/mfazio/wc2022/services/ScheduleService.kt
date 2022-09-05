@@ -10,12 +10,12 @@ import java.time.format.DateTimeFormatter
 
 object ScheduleService : ApiService() {
 
-    suspend fun getScheduleFromDb(): Map<String, ScheduledMatchDbModel>? = getResultOrNull(FirebaseService.getJsonUrlFromPath(URLs.firebaseScheduleUrl))
+    suspend fun getScheduleFromDb(): Map<String, ScheduledMatchDbModel>? = getResultOrNull(FirebaseAdmin.getJsonUrlFromPath(URLs.firebaseScheduleUrl))
 
     suspend fun getExternalScheduleForDate(date: LocalDate): ExternalSchedule? = getResultOrNull(getExternalScheduleUrlForDate(date))
 
     fun saveScheduleToFirebase(scheduledMatches: List<ScheduledMatch>) {
-        FirebaseService.db
+        FirebaseAdmin.db
             .getReference("/schedule")
             .setValueAsync(scheduledMatches.associate(ScheduledMatchDbModel.Companion::fromScheduledMatch))
     }
