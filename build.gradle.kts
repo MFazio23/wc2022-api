@@ -12,10 +12,12 @@ plugins {
     kotlin("jvm") version "1.7.10"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.7.10"
     id("org.gretty") version "3.0.6"
+    id("org.jetbrains.dokka") version "1.7.10"
 }
 
 group = "dev.mfazio.wc2022"
 version = "0.0.1"
+
 application {
     mainClass.set("dev.mfazio.wc2022.ApplicationKt")
 
