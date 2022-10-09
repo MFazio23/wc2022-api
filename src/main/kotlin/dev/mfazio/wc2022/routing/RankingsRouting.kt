@@ -9,6 +9,7 @@ import io.ktor.server.routing.*
 fun Route.rankingsRouting() {
     route("/rankings") {
         get {
+            println(RankingsRepository.getTeamRankings().map(RankedTeamApiModel.Companion::fromRankedTeam))
             call.respond(
                 APIResponse(
                     data = RankingsRepository.getTeamRankings().map(RankedTeamApiModel.Companion::fromRankedTeam)

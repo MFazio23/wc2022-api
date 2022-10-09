@@ -1,6 +1,6 @@
 package dev.mfazio.wc2022.types.db
 
-import dev.mfazio.wc2022.types.ScheduledMatch
+import dev.mfazio.wc2022.types.domain.ScheduledMatch
 import kotlinx.serialization.Serializable
 
 @Serializable

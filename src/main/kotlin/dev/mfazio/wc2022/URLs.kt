@@ -15,4 +15,5 @@ object URLs {
     val apiUrl = EnvConfig.getStringOrNull("apiUrl")
     val dbUrl = EnvConfig.getStringOrNull("dbUrl")
     val webUrl = EnvConfig.getStringOrNull("webUrl")
+    val firebaseAuthFileUrl = EnvConfig.getStringOrNull("firebaseAuthFile")
 }

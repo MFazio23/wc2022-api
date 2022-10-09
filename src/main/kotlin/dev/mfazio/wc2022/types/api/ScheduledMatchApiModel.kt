@@ -1,6 +1,6 @@
 package dev.mfazio.wc2022.types.api
 
-import dev.mfazio.wc2022.types.ScheduledMatch
+import dev.mfazio.wc2022.types.domain.ScheduledMatch
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -9,8 +9,6 @@ data class ScheduledMatchApiModel(
     val awayTeam: String,
     val dateTime: String,
     val group: String,
-    val location: String,
-    val stadium: String,
     val matchStatus: MatchStatusApiModel,
     val homeScore: Int? = null,
     val awayScore: Int? = null,
@@ -22,8 +20,6 @@ data class ScheduledMatchApiModel(
             awayTeam = scheduledMatch.awayTeam,
             dateTime = scheduledMatch.dateTime,
             group = scheduledMatch.group,
-            location = scheduledMatch.location,
-            stadium = scheduledMatch.stadium,
             matchStatus = MatchStatusApiModel.fromMatchStatus(scheduledMatch.matchStatus),
             homeScore = scheduledMatch.homeScore,
             awayScore = scheduledMatch.awayScore,

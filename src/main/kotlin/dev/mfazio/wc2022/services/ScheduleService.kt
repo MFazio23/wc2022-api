@@ -1,7 +1,7 @@
 package dev.mfazio.wc2022.services
 
 import dev.mfazio.wc2022.URLs
-import dev.mfazio.wc2022.types.ScheduledMatch
+import dev.mfazio.wc2022.types.domain.ScheduledMatch
 import dev.mfazio.wc2022.types.db.ScheduledMatchDbModel
 import dev.mfazio.wc2022.types.external.matchdetails.ExternalMatchDetailsResponse
 import dev.mfazio.wc2022.types.external.schedule.ExternalSchedule

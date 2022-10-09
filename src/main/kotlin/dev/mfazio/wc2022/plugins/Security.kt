@@ -9,7 +9,7 @@ fun Application.configureSecurity() {
 
     install(Authentication) {
         firebase {
-            validate {token ->
+            validate { token ->
                 FirebaseAuthUser(
                     userId = token.uid,
                     displayName = token.name,

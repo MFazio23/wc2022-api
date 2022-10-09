@@ -1,6 +1,6 @@
 package dev.mfazio.wc2022.types.api
 
-import dev.mfazio.wc2022.types.MatchStatus
+import dev.mfazio.wc2022.types.domain.MatchStatus
 import kotlinx.serialization.Serializable
 
 @Serializable

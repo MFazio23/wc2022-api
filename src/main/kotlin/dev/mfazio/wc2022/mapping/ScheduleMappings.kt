@@ -1,6 +1,6 @@
 package dev.mfazio.wc2022.mapping
 
-import dev.mfazio.wc2022.types.ScheduledMatch
+import dev.mfazio.wc2022.types.domain.ScheduledMatch
 import dev.mfazio.wc2022.types.db.ScheduledMatchDbModel
 import dev.mfazio.wc2022.types.external.schedule.ExternalSchedule
 import dev.mfazio.wc2022.types.external.schedule.ExternalScheduleMatch

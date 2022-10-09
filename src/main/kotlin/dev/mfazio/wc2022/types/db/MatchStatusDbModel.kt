@@ -1,6 +1,6 @@
 package dev.mfazio.wc2022.types.db
 
-import dev.mfazio.wc2022.types.MatchStatus
+import dev.mfazio.wc2022.types.domain.MatchStatus
 
 enum class MatchStatusDbModel {
     NotStarted,
