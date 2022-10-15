@@ -1,0 +1,21 @@
+package dev.mfazio.wc2022.types.external.schedule
+
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ExternalTeam(
+    @SerialName("Abbreviation")
+    val abbreviation: String,
+    @SerialName("IdAssociation")
+    val idAssociation: String,
+    @SerialName("IdCountry")
+    val idCountry: String,
+    @SerialName("IdTeam")
+    val idTeam: String,
+    @SerialName("ShortClubName")
+    val shortClubName: String,
+    @SerialName("TeamName")
+    val teamName: List<ExternalLocaleDescription>,
+)

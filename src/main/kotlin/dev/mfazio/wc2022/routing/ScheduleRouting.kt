@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter
 fun Route.scheduleRouting() {
     route("schedule") {
         get {
-            println(ScheduleRepository.getScheduledMatches())
             call.respond(
                 APIResponse(
                     data = ScheduleRepository.getScheduledMatches()

@@ -2,8 +2,9 @@ package dev.mfazio.wc2022.mapping
 
 import dev.mfazio.wc2022.types.domain.ScheduledMatch
 import dev.mfazio.wc2022.types.db.ScheduledMatchDbModel
+import dev.mfazio.wc2022.types.external.schedule.ExternalLocaleDescription
+import dev.mfazio.wc2022.types.external.schedule.ExternalResult
 import dev.mfazio.wc2022.types.external.schedule.ExternalSchedule
-import dev.mfazio.wc2022.types.external.schedule.ExternalScheduleMatch
 
 fun Map<String, ScheduledMatchDbModel>.mapToScheduledMatches() = this.map { (matchId, dbMatch) ->
     ScheduledMatch(
@@ -25,15 +26,17 @@ fun Map<String, ScheduledMatchDbModel>.mapToScheduledMatches() = this.map { (mat
 fun List<ExternalSchedule>.mapToScheduledMatches() = this.flatMap(ExternalSchedule::mapToScheduledMatches)
 
 fun ExternalSchedule.mapToScheduledMatches() =
-    this.competition?.activeSeasons?.firstOrNull()?.matches?.map(ExternalScheduleMatch::mapToScheduledMatches) ?: emptyList()
+    this.results.map(ExternalResult::mapToScheduledMatches)
 
-fun ExternalScheduleMatch.mapToScheduledMatches() = ScheduledMatch(
-    matchId = this.idMatch.orEmpty(),
-    stageId = this.idStage.orEmpty(),
-    homeTeam = this.home?.countryId ?: this.placeholderA.orEmpty(),
-    awayTeam = this.away?.countryId ?: this.placeholderB.orEmpty(),
-    dateTime = this.date.orEmpty(),
-    group = this.groupName?.removePrefix("Group ").orEmpty(),
-    location = this.stadiumCityName.orEmpty(),
-    stadium = this.stadiumName.orEmpty(),
+fun ExternalResult.mapToScheduledMatches() = ScheduledMatch(
+    matchId = this.idMatch,
+    stageId = this.idStage,
+    homeTeam = this.home?.idCountry ?: this.placeHolderA,
+    awayTeam = this.away?.idCountry ?: this.placeHolderB,
+    dateTime = this.dateTime,
+    group = this.groupName?.value()?.removePrefix("Group ").orEmpty(),
+    location = this.stadium.cityName.value().orEmpty(),
+    stadium = this.stadium.name.value().orEmpty(),
 )
+
+fun List<ExternalLocaleDescription>?.value() = this?.firstOrNull()?.description
