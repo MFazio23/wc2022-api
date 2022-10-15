@@ -2,13 +2,13 @@ package dev.mfazio.wc2022.repositories
 
 import dev.mfazio.wc2022.mapping.mapToScheduledMatches
 import dev.mfazio.wc2022.services.ScheduleService
-import dev.mfazio.wc2022.types.ScheduledMatch
+import dev.mfazio.wc2022.types.domain.ScheduledMatch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 object ScheduleRepository {
     private const val startDateString = "2022-11-20"
-    private const val endDateString = "2022-11-20"
+    private const val endDateString = "2022-12-20"
 
     private val startDate = LocalDate.parse(startDateString, DateTimeFormatter.ISO_LOCAL_DATE)
     private val endDate = LocalDate.parse(endDateString, DateTimeFormatter.ISO_LOCAL_DATE)

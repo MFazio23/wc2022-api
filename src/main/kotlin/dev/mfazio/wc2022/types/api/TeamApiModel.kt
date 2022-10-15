@@ -1,6 +1,6 @@
 package dev.mfazio.wc2022.types.api
 
-import dev.mfazio.wc2022.types.Team
+import dev.mfazio.wc2022.types.domain.Team
 import kotlinx.serialization.Serializable
 
 @Serializable

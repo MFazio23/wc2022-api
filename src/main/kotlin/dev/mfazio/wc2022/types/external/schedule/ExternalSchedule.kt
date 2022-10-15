@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ExternalSchedule(
-    @SerialName("competition")
-    val competition: ExternalScheduleCompetition?,
+    @SerialName("Results")
+    val results: List<ExternalResult>
 )

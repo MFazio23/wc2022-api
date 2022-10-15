@@ -3,11 +3,6 @@ package dev.mfazio.wc2022.routing
 import dev.mfazio.wc2022.URLs
 import dev.mfazio.wc2022.auth.FirebaseAuthName
 import dev.mfazio.wc2022.auth.FirebaseAuthUser
-import dev.mfazio.wc2022.repositories.RankingsRepository
-import dev.mfazio.wc2022.repositories.ScheduleRepository
-import dev.mfazio.wc2022.types.api.RankedTeamApiModel
-import dev.mfazio.wc2022.types.api.ScheduledMatchApiModel
-import dev.mfazio.wc2022.types.api.TeamApiModel
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -16,8 +11,6 @@ import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 fun Application.configureRouting() {
     install(ContentNegotiation) {
@@ -36,6 +29,18 @@ fun Application.configureRouting() {
         scheduleRouting()
         teamsRouting()
 
+        get("/config") {
+            //TODO: Remove this once we're going live.
+            call.respond(
+                mapOf(
+                    "configApiUrl" to URLs.apiUrl,
+                    "configDbUrl" to URLs.dbUrl,
+                    "configWebUrl" to URLs.webUrl,
+                    "configFirebaseAuthFileUrl" to URLs.firebaseAuthFileUrl,
+                )
+            )
+        }
+
         route("auth-test") {
             get("open") {
                 call.respondText { "Open" }
@@ -44,7 +49,7 @@ fun Application.configureRouting() {
                 get("closed") {
                     call.respond(
                         APIResponse(
-                            data = call.principal<FirebaseAuthUser>()
+                            data = call.principal<FirebaseAuthUser>(),
                         )
                     )
                 }

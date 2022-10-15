@@ -1,4 +1,4 @@
-package dev.mfazio.wc2022.types
+package dev.mfazio.wc2022.types.domain
 
 data class TeamWithPoints(
     val team: Team,

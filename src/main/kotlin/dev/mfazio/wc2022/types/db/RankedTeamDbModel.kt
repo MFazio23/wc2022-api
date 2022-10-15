@@ -1,6 +1,6 @@
 package dev.mfazio.wc2022.types.db
 
-import dev.mfazio.wc2022.types.RankedTeam
+import dev.mfazio.wc2022.types.domain.RankedTeam
 import kotlinx.serialization.Serializable
 
 @Serializable

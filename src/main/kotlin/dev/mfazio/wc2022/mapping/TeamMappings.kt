@@ -1,7 +1,7 @@
 package dev.mfazio.wc2022.mapping
 
-import dev.mfazio.wc2022.types.RankedTeam
-import dev.mfazio.wc2022.types.Team
+import dev.mfazio.wc2022.types.domain.RankedTeam
+import dev.mfazio.wc2022.types.domain.Team
 import dev.mfazio.wc2022.types.db.RankedTeamDbModel
 import dev.mfazio.wc2022.types.external.rankings.ExternalTeamRankings
 

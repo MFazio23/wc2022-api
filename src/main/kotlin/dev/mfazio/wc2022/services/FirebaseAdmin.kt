@@ -16,13 +16,8 @@ object FirebaseAdmin {
         .setDatabaseUrl(URLs.dbUrl)
         .build()
 
-    val app: FirebaseApp = FirebaseApp.initializeApp(firebaseOptions)
+    private val app: FirebaseApp = FirebaseApp.initializeApp(firebaseOptions)
     val db: FirebaseDatabase = FirebaseDatabase.getInstance(app)
-
-    fun init() {
-        // This initializes the Firebase instance, so we can use it later.
-        FirebaseApp.getInstance()
-    }
 
     fun getJsonUrlFromPath(path: String) = "${URLs.dbUrl}$path.json"
 }

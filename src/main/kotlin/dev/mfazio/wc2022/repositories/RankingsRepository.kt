@@ -2,7 +2,7 @@ package dev.mfazio.wc2022.repositories
 
 import dev.mfazio.wc2022.mapping.mapToRankedTeams
 import dev.mfazio.wc2022.services.RankingsService
-import dev.mfazio.wc2022.types.RankedTeam
+import dev.mfazio.wc2022.types.domain.RankedTeam
 
 object RankingsRepository {
     suspend fun getExternalTeamRankings(): List<RankedTeam> =
