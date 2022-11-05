@@ -1,7 +1,7 @@
 package dev.mfazio.wc2022.auth
 
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseToken
+import dev.mfazio.wc2022.services.FirebaseAdmin
 import io.ktor.http.auth.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -52,7 +52,7 @@ suspend fun verifyFirebaseIdToken(
     val token: FirebaseToken = try {
         if (authHeader.authScheme == Bearer && authHeader is HttpAuthHeader.Single) {
             withContext(Dispatchers.IO) {
-                FirebaseAuth.getInstance().verifyIdToken(authHeader.blob)
+                FirebaseAdmin.auth.verifyIdToken(authHeader.blob)
             }
         } else {
             null

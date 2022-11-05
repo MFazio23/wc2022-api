@@ -10,7 +10,6 @@ object RankingsService : ApiService() {
 
     suspend fun getRankingsFromDB(): Map<String, RankedTeamDbModel>? = getResultOrNull(FirebaseAdmin.getJsonUrlFromPath(URLs.firebaseRankingsUrl))
 
-
     fun saveRankingsToFirebase(rankedTeams: List<RankedTeam>) {
         FirebaseAdmin.db
             .getReference("/rankings")

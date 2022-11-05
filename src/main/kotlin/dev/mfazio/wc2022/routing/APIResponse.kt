@@ -9,5 +9,7 @@ data class APIResponse<T>(
 ) {
     companion object {
         val notYetImplemented = APIResponse<String>(error = "Not yet implemented")
+
+        fun withError(error: String? = null) = APIResponse<String>(error = error)
     }
 }
