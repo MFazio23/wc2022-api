@@ -3,6 +3,7 @@ package dev.mfazio.wc2022.mapping
 import dev.mfazio.wc2022.types.domain.RankedTeam
 import dev.mfazio.wc2022.types.domain.Team
 import dev.mfazio.wc2022.types.db.RankedTeamDbModel
+import dev.mfazio.wc2022.types.domain.Ranking
 import dev.mfazio.wc2022.types.external.rankings.ExternalTeamRankings
 
 fun ExternalTeamRankings.mapToRankedTeams(): List<RankedTeam> {
@@ -14,12 +15,14 @@ fun ExternalTeamRankings.mapToRankedTeams(): List<RankedTeam> {
         if (externalTeamRankingItem != null) {
             RankedTeam(
                 team = team,
-                ranking = externalTeamRankingItem.rank,
-                previousRanking = externalTeamRankingItem.previousRank,
-                points = externalTeamRankingItem.totalPoints,
+                fifaRanking = Ranking(
+                    ranking = externalTeamRankingItem.rank,
+                    previousRanking = externalTeamRankingItem.previousRank,
+                    points = externalTeamRankingItem.totalPoints,
+                )
             )
         } else null
-    }.sortedBy { it.ranking }
+    }.sortedBy { it.fifaRanking?.ranking }
 }
 
 fun Map<String, RankedTeamDbModel>.mapToRankedTeams(): List<RankedTeam> = Team.allTeams.mapNotNull { team ->
@@ -28,9 +31,8 @@ fun Map<String, RankedTeamDbModel>.mapToRankedTeams(): List<RankedTeam> = Team.a
     if (dbRankingItem != null) {
         RankedTeam(
             team = team,
-            ranking = dbRankingItem.ranking,
-            previousRanking = dbRankingItem.previousRanking,
-            points = dbRankingItem.points,
+            fifaRanking = Ranking(dbRankingItem.fifa),
+            eloRanking = Ranking(dbRankingItem.elo),
         )
     } else null
-}.sortedBy { it.ranking }
+}.sortedBy { it.fifaRanking?.ranking }

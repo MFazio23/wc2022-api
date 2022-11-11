@@ -4,15 +4,17 @@ import dev.mfazio.utils.extensions.printEach
 import dev.mfazio.wc2022.mapping.mapToRankedTeams
 import dev.mfazio.wc2022.services.RankingsService
 import dev.mfazio.wc2022.types.domain.RankedTeam
+import dev.mfazio.wc2022.types.domain.Ranking
+import dev.mfazio.wc2022.types.domain.Team
 import dev.mfazio.wc2022.types.external.ELORanking
 
 object RankingsRepository {
     suspend fun getExternalTeamRankings(): List<RankedTeam> {
-        val officialRankings = RankingsService.getOfficialRankings()?.mapToRankedTeams() ?: emptyList()
+        val fifaRankings = RankingsService.getFIFARankings()?.mapToRankedTeams() ?: emptyList()
 
         val eloRankings = getELORankingsFromTSV(RankingsService.getELORankings())
 
-        return addELORankings(officialRankings, eloRankings)
+        return mergeRankings(fifaRankings, eloRankings)
     }
 
     suspend fun getTeamRankings(): List<RankedTeam> {
@@ -25,7 +27,7 @@ object RankingsRepository {
         RankingsService.saveRankingsToFirebase(it)
     }
 
-    fun getELORankingsFromTSV(eloRankingsTSV: String?): List<ELORanking> = eloRankingsTSV?.lines()?.map { eloRankingsLine ->
+    private fun getELORankingsFromTSV(eloRankingsTSV: String?): List<ELORanking> = eloRankingsTSV?.lines()?.map { eloRankingsLine ->
         val (tournamentRankString, overallRankString, teamELOCode, ratingString) = eloRankingsLine.split("\t")
 
         ELORanking(
@@ -36,22 +38,14 @@ object RankingsRepository {
         )
     } ?: emptyList()
 
-    fun addELORankings(officialRankings: List<RankedTeam>, eloRankings: List<ELORanking>): List<RankedTeam> {
+    private fun mergeRankings(fifaRankings: List<RankedTeam>, eloRankings: List<ELORanking>) = Team.allTeams.map { team ->
+        val fifa = fifaRankings.find { it.team == team }?.fifaRanking
+        val elo = eloRankings.find { it.teamELOCode == team.eloCode }
 
-        return officialRankings.map { rankedTeam ->
-            val eloRanking = eloRankings.find { it.teamELOCode == rankedTeam.team.flagCode }
-
-            rankedTeam.copy(
-
-            )
-        }
+        RankedTeam(
+            team = team,
+            fifaRanking = Ranking(fifa?.ranking ?: -1),
+            eloRanking = Ranking(elo?.tournamentRank ?: -1)
+        )
     }
-}
-
-suspend fun main() {
-    val eloRankingsTSV = RankingsService.getELORankings()
-
-    val eloRankings = RankingsRepository.getELORankingsFromTSV(eloRankingsTSV)
-
-    eloRankings.printEach()
 }

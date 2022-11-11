@@ -8,9 +8,9 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 object RankingsService : ApiService() {
-    suspend fun getOfficialRankings(): ExternalTeamRankings? = getResultOrNull(URLs.externalRankingsUrl)
-
     suspend fun getRankingsFromDB(): Map<String, RankedTeamDbModel>? = getResultOrNull(FirebaseAdmin.getJsonUrlFromPath(URLs.firebaseRankingsUrl))
+
+    suspend fun getFIFARankings(): ExternalTeamRankings? = getResultOrNull(URLs.fifaRankingsUrl)
 
     suspend fun getELORankings(): String? = getResultOrNull(getELORankingsUrl())
 

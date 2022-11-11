@@ -3,7 +3,7 @@ package dev.mfazio.wc2022.types.domain
 sealed class Team(
     val teamId: String,
     val teamName: String,
-    val flagCode: String,
+    val eloCode: String,
     val group: String,
     val altIds: List<String> = listOf(teamId)
 ) {
@@ -17,7 +17,7 @@ sealed class Team(
     object Croatia : Team("CRO", "Croatia", "HR", "F")
     object Denmark : Team("DEN", "Denmark", "DK", "D")
     object Ecuador : Team("ECU", "Ecuador", "EC", "A")
-    object England : Team("ENG", "England", "GB-ENG", "B")
+    object England : Team("ENG", "England", "EN", "B")
     object France : Team("FRA", "France", "FR", "D")
     object Germany : Team("GER", "Germany", "DE", "E")
     object Ghana : Team("GHA", "Ghana", "GH", "H")
@@ -38,7 +38,7 @@ sealed class Team(
     object Tunisia : Team("TUN", "Tunisia", "TN", "D")
     object Uruguay : Team("URU", "Uruguay", "UY", "H")
     object USA : Team("USA", "USA", "US", "B")
-    object Wales : Team("WAL", "Wales", "GB-WLS", "B")
+    object Wales : Team("WAL", "Wales", "WA", "B")
 
     companion object {
         val allTeams = listOf(

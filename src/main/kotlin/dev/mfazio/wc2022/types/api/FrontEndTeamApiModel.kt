@@ -7,14 +7,14 @@ import kotlinx.serialization.Serializable
 data class FrontEndTeamApiModel(
     val teamId: String,
     val teamName: String,
-    val flagCode: String = "",
+    val eloCode: String = "",
     val group: String,
 ) {
     companion object {
         fun fromTeam(team: Team) = FrontEndTeamApiModel(
             teamId = team.teamId,
             teamName = team.teamName,
-            flagCode = team.flagCode,
+            eloCode = team.eloCode,
             group = team.group
         )
 
