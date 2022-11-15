@@ -1,8 +1,7 @@
 package dev.mfazio.wc2022.repositories
 
 import dev.mfazio.wc2022.services.PartyService
-import dev.mfazio.wc2022.types.domain.Party
-import dev.mfazio.wc2022.types.domain.Player
+import dev.mfazio.wc2022.types.domain.*
 
 object PartyRepository {
 
@@ -30,15 +29,15 @@ object PartyRepository {
             owner = owner,
         )
 
-        // TODO: What if this call fails?
-        PartyService.savePartyToFirebase(party)
+        if (PartyService.savePartyToFirebase(party) == null) {
+            println("Saving the party to Firebase failed.")
+            return null
+        }
 
-        PartyService.addPlayerToParty(
-            partyCode = party.code,
+        return PartyService.addPlayerToParty(
+            partyCode = validCode,
             player = owner
         )
-
-        return PartyService.getPartyByCode(party.code)
     }
 
     fun updatePartyName(code: String, name: String, ownerId: String): Party? {
@@ -48,9 +47,7 @@ object PartyRepository {
             return null
         }
 
-        PartyService.updatePartyName(code, name)
-
-        return PartyService.getPartyByCode(code)
+        return PartyService.updatePartyName(code, name)
     }
 
     fun deleteParty(code: String, ownerId: String): Boolean = PartyService.getPartyByCode(code)?.let { party ->
@@ -72,8 +69,6 @@ object PartyRepository {
             ownerName = ownerName,
         ) ?: return null
 
-        addPlayerToParty(party.code, Player(id = ownerId, name = ownerName))
-
         playersToInclude.forEach { player ->
             addPlayerToParty(party.code, player)
         }
@@ -87,24 +82,47 @@ object PartyRepository {
 
     fun addPlayerToParty(partyCode: String, player: Player): Party? = if (PartyService.getPartyByCode(partyCode) != null) {
         PartyService.addPlayerToParty(partyCode, player)
-        val party = PartyService.getPartyByCode(partyCode)
-        println("AddPlayerToParty.party: $party")
-        party
     } else null
 
-    fun removePlayerFromParty(partyCode: String, playerId: String): Party? {
-        PartyService.removePlayerFromParty(partyCode, playerId)
-
-        //TODO: get the updated party, probably manually done.
-        return null
-    }
+    fun removePlayerFromParty(partyCode: String, playerId: String): Party? = PartyService.removePlayerFromParty(partyCode, playerId)
 
     // Here comes the fun part.
-    fun distributeTeamsForParty(): Party? {
-        return null
+    suspend fun distributeTeamsForParty(ownerId: String, partyCode: String, rankingType: RankingType, teamsPerUser: Int): Party? {
+        val party = getPartyByCode(partyCode) ?: return null
+        val players = party.playersWithTeams.filterNotNull()
+        val totalTeamCount = teamsPerUser * players.size
+        val teams = RankingsRepository
+            .getTeamRankings()
+            .filter { it.getRanking(rankingType) != null }
+            .sortedBy { team ->
+                team.getRanking(rankingType)
+            }
+            .subList(0, totalTeamCount)
+
+        if (party.owner.id != ownerId || players.none() || teams.none() || teamsPerUser < 1 || totalTeamCount > teams.size) {
+            println("Missing data")
+            println("Is correct owner? ${party.owner.id == ownerId}")
+            println("Player Count=${players.size}")
+            println("Team Count=${teams.size}")
+            println("Teams Per User=$teamsPerUser")
+            println("Total team count=$totalTeamCount")
+            return null
+        }
+
+        val chunkedTeams = teams.chunked(players.size) { it.shuffled() }
+        val playersWithTeams = players.mapIndexed { index, player ->
+            player.copy(
+                teams = chunkedTeams.fold(listOf()) { result, teams ->
+                    teams.getOrNull(index)?.let { rankedTeam ->
+                        result + rankedTeam.team
+                    } ?: result
+                }
+            )
+        }
+
+        return PartyService.updateTeamsForParty(partyCode, playersWithTeams)
     }
 
-    //TODO: Check for duplicated party tokens
     private fun getValidPartyCode(startingCode: String? = null): String {
         var code = startingCode
 
@@ -123,8 +141,4 @@ object PartyRepository {
 
     private val validPartyCodeCharacters = "ABCDEFGHIJKLMNPQRSTUVWXYZ".toList()
     private const val partyCodeLength = 6
-}
-
-suspend fun main() {
-    println("go")
 }

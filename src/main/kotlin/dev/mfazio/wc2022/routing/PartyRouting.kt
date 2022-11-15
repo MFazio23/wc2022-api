@@ -7,6 +7,7 @@ import dev.mfazio.wc2022.extensions.notYetImplemented
 import dev.mfazio.wc2022.extensions.ok
 import dev.mfazio.wc2022.repositories.PartyRepository
 import dev.mfazio.wc2022.types.api.PartyApiModel
+import dev.mfazio.wc2022.types.api.RankingTypeApiModel
 import dev.mfazio.wc2022.types.api.TestPartyRequestApiModel
 import dev.mfazio.wc2022.types.domain.Player
 import io.ktor.http.*
@@ -21,11 +22,8 @@ fun Route.partyRouting() {
     route("/party") {
         get("/manual") {
             val userId = call.parameters["userId"]
-            println("Manual call: $userId")
 
             val parties = PartyRepository.getPartiesForUser(userId)
-
-            println(parties)
 
             call.respond(
                 APIResponse(
@@ -42,7 +40,7 @@ fun Route.partyRouting() {
 
                 call.respond(
                     APIResponse(
-                        data = parties.map { PartyApiModel.fromParty(it)  }
+                        data = parties.map { PartyApiModel.fromParty(it) }
                     )
                 )
             }
@@ -92,10 +90,10 @@ fun Route.partyRouting() {
                     val principal = call.principal<FirebaseAuthUser>()
 
                     if (partyName == null || partyCode == null || principal == null) {
-                        call.badRequest()
+                        call.badRequest("Party not found")
                     } else {
                         PartyRepository.updatePartyName(partyCode, partyName, principal.userId)?.let { updatedParty ->
-                            call.ok(updatedParty)
+                            call.ok(PartyApiModel.fromParty(updatedParty))
                         } ?: call.badRequest()
                     }
                 }
@@ -110,8 +108,27 @@ fun Route.partyRouting() {
                     }
                 }
                 put("draft") {
-                    //TODO: Draft for party
-                    call.notYetImplemented()
+                    val principal = call.principal<FirebaseAuthUser>()
+                    val partyCode = call.parameters["code"]
+                    val rankingType = call.parameters["rankingType"]?.let { RankingTypeApiModel.valueOf(it) }?.toRankingType()
+                    val teamsPerUser = call.parameters["teamsPerUser"]?.toIntOrNull()
+
+                    if (principal == null || partyCode == null || rankingType == null || teamsPerUser == null) {
+                        val errorMessage = when {
+                            rankingType == null -> "Ranking type is required"
+                            teamsPerUser == null -> "Teams per user is required"
+                            else -> "Party not found"
+                        }
+                        call.badRequest(errorMessage)
+                    } else {
+                        val party = PartyRepository.distributeTeamsForParty(principal.userId, partyCode, rankingType, teamsPerUser)
+
+                        if (party != null) {
+                            call.ok(PartyApiModel.fromParty(party))
+                        } else {
+                            call.badRequest()
+                        }
+                    }
                 }
                 delete("{user-id}") {
                     //TODO: Remove user from party
@@ -142,6 +159,7 @@ fun Route.partyRouting() {
                 )
 
                 if (party == null) {
+                    println("Null party")
                     call.partyNotFound()
                 } else {
                     call.respond(

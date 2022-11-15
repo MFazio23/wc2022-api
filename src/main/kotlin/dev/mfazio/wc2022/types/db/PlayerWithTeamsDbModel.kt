@@ -3,12 +3,11 @@ package dev.mfazio.wc2022.types.db
 import dev.mfazio.wc2022.types.domain.Player
 import dev.mfazio.wc2022.types.domain.PlayerWithTeams
 import dev.mfazio.wc2022.types.domain.Team
-import dev.mfazio.wc2022.types.domain.TeamWithPoints
 
 data class PlayerWithTeamsDbModel(
     val id: String? = null,
     val name: String? = null,
-    val teams: List<String?> = emptyList(),
+    val teams: Map<String, String?> = emptyMap(),
 ) {
     fun toPlayerWithTeams() =
         if (id == null || name == null) {
@@ -19,12 +18,8 @@ data class PlayerWithTeamsDbModel(
                     id = id,
                     name = name,
                 ),
-                teams = teams.map { teamId ->
-                    Team.getTeamById(teamId)?.let { team ->
-                        TeamWithPoints(
-                            team = team
-                        )
-                    }
+                teams = teams.keys.mapNotNull { teamId ->
+                    Team.getTeamById(teamId)
                 }
             )
         }
@@ -34,7 +29,9 @@ data class PlayerWithTeamsDbModel(
             PlayerWithTeamsDbModel(
                 id = playerWithTeams.player.id,
                 name = playerWithTeams.player.name,
-                teams = playerWithTeams.teams.mapNotNull { it?.team?.teamId }
+                teams = playerWithTeams.teams.associate { team ->
+                    team.teamId to team.teamName
+                }
             )
     }
 }
