@@ -6,7 +6,7 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 
- /**
+/**
  * Retrieves an authenticated [Principal] for `this` call.
  */
 inline fun <reified P : Principal> ApplicationCall.principal(): P? = authentication.principal()
@@ -26,3 +26,7 @@ suspend inline fun <reified T : Any> ApplicationCall.ok(result: T?) = this.respo
         data = result
     )
 )
+
+suspend fun ApplicationCall.noContent() = this.respond(HttpStatusCode.NoContent)
+
+suspend fun ApplicationCall.unauthorized(message: String? = null) = this.respond(HttpStatusCode.Unauthorized, APIResponse.withError(message))

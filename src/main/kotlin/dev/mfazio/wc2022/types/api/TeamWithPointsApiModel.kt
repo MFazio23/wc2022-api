@@ -1,7 +1,7 @@
-package dev.mfazio.wc2022.types.domain
+package dev.mfazio.wc2022.types.api
 
-data class TeamWithPoints(
-    val team: Team,
+data class TeamWithPointsApiModel(
+    val team: String,
     val wins: Int = 0,
     val losses: Int = 0,
     val ties: Int = 0,

@@ -1,12 +1,10 @@
 package dev.mfazio.wc2022.services
 
-import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dev.mfazio.wc2022.types.db.PartyDbModel
 import dev.mfazio.wc2022.types.db.PlayerDbModel
-import dev.mfazio.wc2022.types.db.PlayerWithTeamsDbModel
 import dev.mfazio.wc2022.types.domain.Party
 import dev.mfazio.wc2022.types.domain.Player
 import dev.mfazio.wc2022.types.domain.PlayerWithTeams
@@ -36,12 +34,12 @@ object PartyService : ApiService() {
     }
 
     fun getPartyByCode(partyCode: String, includeDeleted: Boolean = false) =
-        parties.filter { includeDeleted || !it.isDeleted }.firstOrNull {
+        parties.filter { includeDeleted || it.isDeleted != true }.firstOrNull {
             it.code == partyCode
         }?.toParty()
 
-    fun getPartiesForUser(userId: String) = parties
-        .filter { it.players.containsKey(userId) }
+    fun getPartiesForUser(userId: String, includeDeleted: Boolean = false) = parties
+        .filter { (includeDeleted || it.isDeleted != true) && it.players.containsKey(userId) }
         .mapNotNull { it.toParty() }
 
     fun savePartyToFirebase(party: Party): Party? = try {

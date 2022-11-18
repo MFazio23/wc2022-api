@@ -7,7 +7,7 @@ data class PartyDbModel(
     val code: String? = null,
     val owner: PlayerDbModel? = null,
     val players: Map<String, PlayerWithTeamsDbModel> = emptyMap(),
-    val isDeleted: Boolean = false,
+    @field:JvmField val isDeleted: Boolean? = false,
 ) {
     fun toParty() = this.owner?.toPlayer()?.let { owner ->
         Party(
@@ -17,7 +17,7 @@ data class PartyDbModel(
             playersWithTeams = this.players.values.map { playerDbModel ->
                 playerDbModel.toPlayerWithTeams()
             },
-            isDeleted = isDeleted
+            isDeleted = isDeleted ?: false
         )
     }
 

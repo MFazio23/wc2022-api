@@ -10,7 +10,7 @@ object PartyRepository {
 
     fun getPartiesForUser(userId: String?): List<Party> =
         userId?.let {
-            PartyService.getPartiesForUser(userId)
+            PartyService.getPartiesForUser(userId, includeDeleted = false)
         } ?: emptyList()
 
     fun createParty(
@@ -51,7 +51,7 @@ object PartyRepository {
     }
 
     fun deleteParty(code: String, ownerId: String): Boolean = PartyService.getPartyByCode(code)?.let { party ->
-        party.owner.id != ownerId && PartyService.deleteParty(partyCode = code)
+        party.owner.id == ownerId && PartyService.deleteParty(partyCode = code)
     } ?: false
 
     suspend fun createTestParty(
@@ -91,13 +91,13 @@ object PartyRepository {
         val party = getPartyByCode(partyCode) ?: return null
         val players = party.playersWithTeams.filterNotNull()
         val totalTeamCount = teamsPerUser * players.size
+
         val teams = RankingsRepository
             .getTeamRankings()
             .filter { it.getRanking(rankingType) != null }
             .sortedBy { team ->
                 team.getRanking(rankingType)
             }
-            .subList(0, totalTeamCount)
 
         if (party.owner.id != ownerId || players.none() || teams.none() || teamsPerUser < 1 || totalTeamCount > teams.size) {
             println("Missing data")
@@ -109,7 +109,7 @@ object PartyRepository {
             return null
         }
 
-        val chunkedTeams = teams.chunked(players.size) { it.shuffled() }
+        val chunkedTeams = teams.subList(0, totalTeamCount).chunked(players.size) { it.shuffled() }
         val playersWithTeams = players.mapIndexed { index, player ->
             player.copy(
                 teams = chunkedTeams.fold(listOf()) { result, teams ->

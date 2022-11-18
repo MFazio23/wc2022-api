@@ -12,4 +12,11 @@ data class PlayerApiModel(
         id = id,
         name = name,
     )
+
+    companion object {
+        fun fromPlayer(player: Player) = PlayerApiModel(
+            id = player.id,
+            name = player.name,
+        )
+    }
 }

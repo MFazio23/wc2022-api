@@ -14,4 +14,9 @@ enum class RankingTypeApiModel {
         ELO -> RankingType.ELO
         Random -> RankingType.Random
     }
+
+    companion object {
+        fun fromString(stringRankingType: String?) =
+            values().find { it.name.equals(stringRankingType, true) }
+    }
 }

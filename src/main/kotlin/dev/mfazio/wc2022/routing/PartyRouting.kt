@@ -3,8 +3,9 @@ package dev.mfazio.wc2022.routing
 import dev.mfazio.wc2022.auth.FirebaseAuthName
 import dev.mfazio.wc2022.auth.FirebaseAuthUser
 import dev.mfazio.wc2022.extensions.badRequest
-import dev.mfazio.wc2022.extensions.notYetImplemented
+import dev.mfazio.wc2022.extensions.noContent
 import dev.mfazio.wc2022.extensions.ok
+import dev.mfazio.wc2022.extensions.unauthorized
 import dev.mfazio.wc2022.repositories.PartyRepository
 import dev.mfazio.wc2022.types.api.PartyApiModel
 import dev.mfazio.wc2022.types.api.RankingTypeApiModel
@@ -64,24 +65,32 @@ fun Route.partyRouting() {
                 }
             }
             route("{code}") {
+                get {
+                    val partyCode = call.parameters["code"] ?: return@get call.partyNotFound()
+
+                    PartyRepository.getPartyByCode(partyCode)?.let { party ->
+                        call.ok(PartyApiModel.fromParty(party))
+                    } ?: call.partyNotFound()
+
+                }
                 // Join existing party
                 post {
                     val partyCode = call.parameters["code"]
                     val principal = call.principal<FirebaseAuthUser>()
 
                     if (partyCode == null || principal == null) {
-                        call.badRequest()
-                    } else {
-                        PartyRepository.addPlayerToParty(
-                            partyCode = partyCode,
-                            player = Player(
-                                id = principal.userId,
-                                name = principal.displayName,
-                            )
-                        )?.let { updatedParty ->
-                            call.ok(PartyApiModel.fromParty(updatedParty))
-                        } ?: call.partyNotFound()
+                        return@post call.badRequest()
                     }
+                    PartyRepository.addPlayerToParty(
+                        partyCode = partyCode,
+                        player = Player(
+                            id = principal.userId,
+                            name = principal.displayName,
+                        )
+                    )?.let { updatedParty ->
+                        call.ok(PartyApiModel.fromParty(updatedParty))
+                    } ?: call.partyNotFound()
+
                 }
                 // Update party name
                 put {
@@ -90,27 +99,31 @@ fun Route.partyRouting() {
                     val principal = call.principal<FirebaseAuthUser>()
 
                     if (partyName == null || partyCode == null || principal == null) {
-                        call.badRequest("Party not found")
-                    } else {
-                        PartyRepository.updatePartyName(partyCode, partyName, principal.userId)?.let { updatedParty ->
-                            call.ok(PartyApiModel.fromParty(updatedParty))
-                        } ?: call.badRequest()
+                        return@put call.badRequest("Party not found")
                     }
+                    PartyRepository.updatePartyName(partyCode, partyName, principal.userId)?.let { updatedParty ->
+                        call.ok(PartyApiModel.fromParty(updatedParty))
+                    } ?: call.badRequest()
                 }
                 delete {
                     val partyCode = call.parameters["code"]
                     val principal = call.principal<FirebaseAuthUser>()
 
                     if (partyCode == null || principal == null) {
-                        call.badRequest()
+                        return@delete call.badRequest()
+                    }
+                    val success = PartyRepository.deleteParty(partyCode, principal.userId)
+
+                    if (success) {
+                        call.noContent()
                     } else {
-                        PartyRepository.deleteParty(partyCode, principal.userId)
+                        call.badRequest("Party deletion was unsuccessful.")
                     }
                 }
                 put("draft") {
                     val principal = call.principal<FirebaseAuthUser>()
                     val partyCode = call.parameters["code"]
-                    val rankingType = call.parameters["rankingType"]?.let { RankingTypeApiModel.valueOf(it) }?.toRankingType()
+                    val rankingType = call.parameters["rankingType"]?.let { RankingTypeApiModel.fromString(it) }?.toRankingType()
                     val teamsPerUser = call.parameters["teamsPerUser"]?.toIntOrNull()
 
                     if (principal == null || partyCode == null || rankingType == null || teamsPerUser == null) {
@@ -119,20 +132,38 @@ fun Route.partyRouting() {
                             teamsPerUser == null -> "Teams per user is required"
                             else -> "Party not found"
                         }
-                        call.badRequest(errorMessage)
-                    } else {
-                        val party = PartyRepository.distributeTeamsForParty(principal.userId, partyCode, rankingType, teamsPerUser)
+                        return@put call.badRequest(errorMessage)
+                    }
 
-                        if (party != null) {
-                            call.ok(PartyApiModel.fromParty(party))
-                        } else {
-                            call.badRequest()
-                        }
+                    val party = PartyRepository.distributeTeamsForParty(principal.userId, partyCode, rankingType, teamsPerUser)
+
+                    if (party != null) {
+                        call.ok(PartyApiModel.fromParty(party))
+                    } else {
+                        call.badRequest()
                     }
                 }
-                delete("{user-id}") {
-                    //TODO: Remove user from party
-                    call.notYetImplemented()
+                delete("{userId}") {
+                    val principal = call.principal<FirebaseAuthUser>()
+                    val partyCode = call.parameters["code"]
+                    val userId = call.parameters["userId"]
+
+                    if (principal == null || partyCode == null || userId == null) {
+                        return@delete call.partyNotFound()
+                    }
+                    val party = PartyRepository.getPartyByCode(partyCode) ?: return@delete call.partyNotFound()
+
+                    if (party.owner.id != principal.userId && userId != principal.userId) {
+                        return@delete call.unauthorized("You must either be removing yourself from the party or be the owner of the party.")
+                    }
+
+                    val updatedParty = PartyRepository.removePlayerFromParty(partyCode, userId)
+
+                    if (updatedParty != null) {
+                        call.ok(PartyApiModel.fromParty(updatedParty))
+                    } else {
+                        call.badRequest()
+                    }
                 }
             }
         }
