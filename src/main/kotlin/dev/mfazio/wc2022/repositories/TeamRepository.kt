@@ -11,13 +11,13 @@ object TeamRepository {
         val teamsWithPoints = Team.allTeams.map {
             TeamWithPoints(
                 it,
-                wins = Random.nextInt(0, 5),
+                /*wins = Random.nextInt(0, 5),
                 losses = Random.nextInt(0, 5),
                 ties = Random.nextInt(0, 4),
                 goalsFor = Random.nextInt(0, 13),
                 goalsAgainst = Random.nextInt(0, 13),
                 cleanSheets = Random.nextInt(0, 3),
-                isEliminated = Random.nextBoolean(),
+                isEliminated = Random.nextBoolean(),*/
             )
         }
 

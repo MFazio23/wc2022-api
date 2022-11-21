@@ -5,12 +5,9 @@ import dev.mfazio.wc2022.extensions.atEndOfDayUtc
 import dev.mfazio.wc2022.extensions.atStartOfDayUtc
 import dev.mfazio.wc2022.types.domain.ScheduledMatch
 import dev.mfazio.wc2022.types.db.ScheduledMatchDbModel
-import dev.mfazio.wc2022.types.external.matchdetails.ExternalMatchDetailsResponse
+import dev.mfazio.wc2022.types.external.matchdetails.ExternalMatchDetails
 import dev.mfazio.wc2022.types.external.schedule.ExternalSchedule
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -33,7 +30,7 @@ object ScheduleService : ApiService() {
             .replace("{startDateTime}", urlDateTimeFormat.format(startDateTime))
             .replace("{endDateTime}", urlDateTimeFormat.format(endDateTime))
 
-    suspend fun getExternalMatchDetailsForMatch(matchId: String, stageId: String): ExternalMatchDetailsResponse? =
+    suspend fun getExternalMatchDetailsForMatch(matchId: String, stageId: String): ExternalMatchDetails? =
         getResultOrNull(getExternalMatchDetailsUrl(matchId, stageId))
 
     private fun getExternalMatchDetailsUrl(matchId: String, stageId: String): String =
