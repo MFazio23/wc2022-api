@@ -20,8 +20,16 @@ fun Route.scheduleRouting() {
             )
         }
         put {
-            val schedule = ScheduleRepository.updateSchedule()
-            call.respond(schedule.map(ScheduledMatchApiModel.Companion::fromScheduledMatch).sortedBy { it.dateTime })
+            val dateString = call.parameters["date"]
+            val date =
+                if (dateString != null) {
+                    LocalDate.parse(call.parameters["date"], DateTimeFormatter.ISO_LOCAL_DATE)
+                } else LocalDate.now()
+            val scheduledMatches = ScheduleRepository.updateScheduleForDate(date)
+
+            if (scheduledMatches.none()) return@put call.badRequest("Matches not found.")
+
+            call.ok(scheduledMatches.map(ScheduledMatchApiModel.Companion::fromScheduledMatch))
         }
         route("{date}") {
             get {
@@ -41,6 +49,10 @@ fun Route.scheduleRouting() {
 
                 call.ok(scheduledMatches.map(ScheduledMatchApiModel.Companion::fromScheduledMatch))
             }
+        }
+        put("/all") {
+            val schedule = ScheduleRepository.updateSchedule()
+            call.respond(schedule.map(ScheduledMatchApiModel.Companion::fromScheduledMatch).sortedBy { it.dateTime })
         }
     }
 }

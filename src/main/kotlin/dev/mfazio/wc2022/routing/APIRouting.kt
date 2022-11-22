@@ -3,6 +3,10 @@ package dev.mfazio.wc2022.routing
 import dev.mfazio.wc2022.URLs
 import dev.mfazio.wc2022.auth.FirebaseAuthName
 import dev.mfazio.wc2022.auth.FirebaseAuthUser
+import dev.mfazio.wc2022.extensions.ok
+import dev.mfazio.wc2022.repositories.PartyRepository
+import dev.mfazio.wc2022.repositories.ScheduleRepository
+import dev.mfazio.wc2022.types.api.StatusApiModel
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -28,32 +32,13 @@ fun Application.configureRouting() {
         rankingsRouting()
         scheduleRouting()
         teamsRouting()
-
-        get("/config") {
-            //TODO: Remove this once we're going live.
-            call.respond(
-                mapOf(
-                    "configApiUrl" to URLs.apiUrl,
-                    "configDbUrl" to URLs.dbUrl,
-                    "configWebUrl" to URLs.webUrl,
-                    "configFirebaseAuthFileUrl" to URLs.firebaseAuthFileUrl,
+        get("status") {
+            call.ok(
+                StatusApiModel(
+                    partyCount =                    PartyRepository.getPartyCount(),
+                    scheduledMatchCount = ScheduleRepository.getScheduledMatchCount()
                 )
             )
-        }
-
-        route("auth-test") {
-            get("open") {
-                call.respondText { "Open" }
-            }
-            authenticate(FirebaseAuthName) {
-                get("closed") {
-                    call.respond(
-                        APIResponse(
-                            data = call.principal<FirebaseAuthUser>(),
-                        )
-                    )
-                }
-            }
         }
     }
 }

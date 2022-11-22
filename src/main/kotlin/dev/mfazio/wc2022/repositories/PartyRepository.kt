@@ -13,6 +13,8 @@ object PartyRepository {
             PartyService.getPartiesForUser(userId, includeDeleted = false)
         } ?: emptyList()
 
+    fun getPartyCount() = PartyService.getPartyCount()
+
     fun createParty(
         name: String? = null,
         code: String? = null,

@@ -25,16 +25,11 @@ object ScheduleService : ApiService() {
     init {
         scheduleRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot?) {
-                println("on schedule data change: $scheduledMatches")
                 snapshot?.children?.toList()?.let { dbMatches ->
-                    println("db matches: $dbMatches")
                     scheduledMatches = dbMatches.map {
                         it.getValue(ScheduledMatchDbModel::class.java)
                     }
-
-                    println("Scheduled matches: [$scheduledMatches]")
                 }
-                println("after data change")
             }
 
             override fun onCancelled(error: DatabaseError?) {
@@ -42,6 +37,8 @@ object ScheduleService : ApiService() {
             }
         })
     }
+
+    fun getScheduledMatchCount() = scheduledMatches.size
 
     suspend fun getScheduleFromDb(): Map<String, ScheduledMatchDbModel>? = getResultOrNull(FirebaseAdmin.getJsonUrlFromPath(URLs.firebaseScheduleUrl))
 

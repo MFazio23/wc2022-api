@@ -44,6 +44,8 @@ object PartyService : ApiService() {
         .filter { (includeDeleted || it.isDeleted != true) && it.players.containsKey(userId) }
         .mapNotNull { it.toParty() }
 
+    fun getPartyCount() = parties.size
+
     fun savePartyToFirebase(party: Party): Party? = try {
         FirebaseAdmin.db
             .getReference("$basePartyPath/${party.code}")

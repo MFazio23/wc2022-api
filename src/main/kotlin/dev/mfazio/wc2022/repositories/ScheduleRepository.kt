@@ -13,6 +13,8 @@ object ScheduleRepository {
     private val startDate = LocalDate.parse(startDateString, DateTimeFormatter.ISO_LOCAL_DATE)
     private val endDate = LocalDate.parse(endDateString, DateTimeFormatter.ISO_LOCAL_DATE)
 
+    fun getScheduledMatchCount() = ScheduleService.getScheduledMatchCount()
+
     suspend fun getScheduledMatches() = ScheduleService.getScheduleFromDb()?.mapToScheduledMatches() ?: emptyList()
 
     fun getScheduledMatchesForDate(localDate: LocalDate) = ScheduleService.getScheduledMatchesForDate(localDate)
