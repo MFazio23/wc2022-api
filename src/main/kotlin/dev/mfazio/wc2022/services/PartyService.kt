@@ -21,14 +21,16 @@ object PartyService : ApiService() {
 
     init {
         partyRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                parties = snapshot.children.toList().map {
-                   it.getValue(PartyDbModel::class.java)
+            override fun onDataChange(snapshot: DataSnapshot?) {
+                snapshot?.children?.toList()?.let { dbParties ->
+                    parties = dbParties.map {
+                        it.getValue(PartyDbModel::class.java)
+                    }
                 }
             }
 
             override fun onCancelled(error: DatabaseError?) {
-                println("Read failed: ${error?.code}")
+                println("Parties read failed: ${error?.code}")
             }
         })
     }

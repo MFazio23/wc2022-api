@@ -15,6 +15,8 @@ object ScheduleRepository {
 
     suspend fun getScheduledMatches() = ScheduleService.getScheduleFromDb()?.mapToScheduledMatches() ?: emptyList()
 
+    fun getScheduledMatchesForDate(localDate: LocalDate) = ScheduleService.getScheduledMatchesForDate(localDate)
+
     suspend fun getExternalSchedule(): List<ScheduledMatch> = startDate.datesUntil(endDate).toList().flatMap { date ->
         getExternalScheduleForDate(date) ?: emptyList()
     }
@@ -24,5 +26,13 @@ object ScheduleRepository {
 
     suspend fun updateSchedule(): List<ScheduledMatch> = getExternalSchedule().also {
         ScheduleService.saveScheduleToFirebase(it)
+    }
+
+    suspend fun updateScheduleForDate(date: LocalDate): List<ScheduledMatch> {
+        val matches = getExternalScheduleForDate(date) ?: emptyList()
+
+        val saveResults = matches.map { ScheduleService.saveScheduledMatchToFirebase(it) }
+
+        return if (saveResults.all { it }) matches else emptyList()
     }
 }

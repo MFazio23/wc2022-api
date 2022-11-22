@@ -1,5 +1,7 @@
 package dev.mfazio.wc2022.routing
 
+import dev.mfazio.wc2022.extensions.badRequest
+import dev.mfazio.wc2022.extensions.ok
 import dev.mfazio.wc2022.repositories.ScheduleRepository
 import dev.mfazio.wc2022.types.api.ScheduledMatchApiModel
 import io.ktor.server.application.*
@@ -23,20 +25,21 @@ fun Route.scheduleRouting() {
         }
         route("{date}") {
             get {
-                //TODO: update to pull from DB
                 val date = LocalDate.parse(call.parameters["date"], DateTimeFormatter.ISO_LOCAL_DATE)
-                val scheduledMatches = ScheduleRepository.getExternalScheduleForDate(date)
+                val scheduledMatches = ScheduleRepository.getScheduledMatchesForDate(date)
                 call.respond(
                     APIResponse(
-                        data = scheduledMatches
+                        data = scheduledMatches.map(ScheduledMatchApiModel.Companion::fromScheduledMatch)
                     )
                 )
             }
             put {
-                //TODO: Update a single day
-                call.respond(
-                    APIResponse.notYetImplemented
-                )
+                val date = LocalDate.parse(call.parameters["date"], DateTimeFormatter.ISO_LOCAL_DATE)
+                val scheduledMatches = ScheduleRepository.updateScheduleForDate(date)
+
+                if (scheduledMatches.none()) return@put call.badRequest("Matches not found.")
+
+                call.ok(scheduledMatches.map(ScheduledMatchApiModel.Companion::fromScheduledMatch))
             }
         }
     }

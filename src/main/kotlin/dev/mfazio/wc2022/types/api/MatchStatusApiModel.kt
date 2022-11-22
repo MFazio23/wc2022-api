@@ -5,16 +5,28 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class MatchStatusApiModel {
-    NotStarted,
-    InProgress,
-    Complete,
+    Played,
+    ToBePlayed,
+    Live,
+    Abandoned,
+    Postponed,
+    Cancelled,
+    Forfeited,
+    LineUps,
+    Suspended,
     Unknown;
 
     companion object {
         fun fromMatchStatus(matchStatus: MatchStatus) = when(matchStatus) {
-            MatchStatus.NotStarted -> NotStarted
-            MatchStatus.InProgress -> InProgress
-            MatchStatus.Complete -> Complete
+            MatchStatus.Played -> Played
+            MatchStatus.ToBePlayed -> ToBePlayed
+            MatchStatus.Live -> Live
+            MatchStatus.Abandoned -> Abandoned
+            MatchStatus.Postponed -> Postponed
+            MatchStatus.Cancelled -> Cancelled
+            MatchStatus.Forfeited -> Forfeited
+            MatchStatus.LineUps -> LineUps
+            MatchStatus.Suspended -> Suspended
             else -> Unknown
         }
     }

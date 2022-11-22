@@ -1,19 +1,18 @@
 package dev.mfazio.wc2022.types.domain
 
-import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
-@Serializable
 data class ScheduledMatch(
     val matchId: String,
-    val stageId: String,
+    val stageId: String?,
     val homeTeam: String,
     val awayTeam: String,
-    val dateTime: String,
-    val group: String,
-    val location: String,
-    val stadium: String,
-    val matchStatus: MatchStatus = MatchStatus.NotStarted,
+    val dateTime: LocalDateTime,
+    val group: String?,
+    val location: String?,
+    val stadium: String?,
+    val matchStatus: MatchStatus = MatchStatus.ToBePlayed,
+    val matchTime: String? = null,
     val homeScore: Int? = null,
     val awayScore: Int? = null,
-    val currentMinute: Int? = null,
 )

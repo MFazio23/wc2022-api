@@ -2,28 +2,29 @@ package dev.mfazio.wc2022.mapping
 
 import dev.mfazio.wc2022.types.domain.ScheduledMatch
 import dev.mfazio.wc2022.types.db.ScheduledMatchDbModel
+import dev.mfazio.wc2022.types.domain.MatchStatus
 import dev.mfazio.wc2022.types.external.schedule.ExternalLocaleDescription
 import dev.mfazio.wc2022.types.external.schedule.ExternalResult
 import dev.mfazio.wc2022.types.external.schedule.ExternalSchedule
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 fun Map<String, ScheduledMatchDbModel>.mapToScheduledMatches() = this.map { (matchId, dbMatch) ->
     ScheduledMatch(
         matchId = matchId,
         stageId = dbMatch.stageId,
-        homeTeam = dbMatch.homeTeam,
-        awayTeam = dbMatch.awayTeam,
-        dateTime = dbMatch.dateTime,
+        homeTeam = dbMatch.homeTeam ?: "N/A",
+        awayTeam = dbMatch.awayTeam ?: "N/A",
+        dateTime = LocalDateTime.parse(dbMatch.dateTime, matchDateTimeFormat),
         group = dbMatch.group,
         location = dbMatch.location,
         stadium = dbMatch.stadium,
-        matchStatus = dbMatch.matchStatus.toMatchStatus(),
+        matchStatus = MatchStatus.valueOfOrUnknown(dbMatch.matchStatus),
         homeScore = dbMatch.homeScore,
         awayScore = dbMatch.awayScore,
-        currentMinute = dbMatch.currentMinute,
+        matchTime = dbMatch.matchTime,
     )
 }.sortedBy { it.dateTime }
-
-fun List<ExternalSchedule>.mapToScheduledMatches() = this.flatMap(ExternalSchedule::mapToScheduledMatches)
 
 fun ExternalSchedule.mapToScheduledMatches() =
     this.results.map(ExternalResult::mapToScheduledMatches)
@@ -33,10 +34,16 @@ fun ExternalResult.mapToScheduledMatches() = ScheduledMatch(
     stageId = this.idStage,
     homeTeam = this.home?.idCountry ?: this.placeHolderA,
     awayTeam = this.away?.idCountry ?: this.placeHolderB,
-    dateTime = this.dateTime,
+    homeScore = this.homeScore,
+    awayScore = this.awayScore,
+    dateTime = LocalDateTime.parse(this.dateTime, matchDateTimeFormat),
     group = this.groupName?.value()?.removePrefix("Group ").orEmpty(),
     location = this.stadium.cityName.value().orEmpty(),
     stadium = this.stadium.name.value().orEmpty(),
+    matchStatus = this.matchStatus,
+    matchTime = this.matchTime,
 )
 
 fun List<ExternalLocaleDescription>?.value() = this?.firstOrNull()?.description
+
+val matchDateTimeFormat = DateTimeFormatter.ISO_DATE_TIME
