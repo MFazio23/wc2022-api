@@ -1,4 +1,4 @@
-package dev.mfazio.wc2022.types.external.schedule
+package dev.mfazio.wc2022.types.external
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

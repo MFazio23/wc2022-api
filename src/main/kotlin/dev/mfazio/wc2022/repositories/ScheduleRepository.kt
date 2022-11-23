@@ -2,6 +2,7 @@ package dev.mfazio.wc2022.repositories
 
 import dev.mfazio.wc2022.mapping.mapToScheduledMatches
 import dev.mfazio.wc2022.services.ScheduleService
+import dev.mfazio.wc2022.types.domain.MatchStatus
 import dev.mfazio.wc2022.types.domain.ScheduledMatch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -23,8 +24,7 @@ object ScheduleRepository {
         getExternalScheduleForDate(date) ?: emptyList()
     }
 
-    suspend fun getExternalScheduleForDate(date: LocalDate) =
-        ScheduleService.getExternalScheduleForDate(date)?.mapToScheduledMatches()
+    suspend fun getExternalScheduleForDate(date: LocalDate): List<ScheduledMatch>? = ScheduleService.getExternalScheduleForDate(date)?.mapToScheduledMatches()
 
     suspend fun updateSchedule(): List<ScheduledMatch> = getExternalSchedule().also {
         ScheduleService.saveScheduleToFirebase(it)
@@ -33,8 +33,30 @@ object ScheduleRepository {
     suspend fun updateScheduleForDate(date: LocalDate): List<ScheduledMatch> {
         val matches = getExternalScheduleForDate(date) ?: emptyList()
 
-        val saveResults = matches.map { ScheduleService.saveScheduledMatchToFirebase(it) }
+        val groupedMatches = matches.groupBy { it.matchStatus == MatchStatus.Live }
 
-        return if (saveResults.all { it }) matches else emptyList()
+        val liveMatches = groupedMatches[true] ?: emptyList()
+        val nonLiveMatches = groupedMatches[false] ?: emptyList()
+
+        val saveResults = nonLiveMatches.map { ScheduleService.saveScheduledMatchToFirebase(it) }
+
+        val liveResults = liveMatches.map { liveMatch ->
+            if (liveMatch.stageId != null) {
+                ScheduleService.getMatchDetails(liveMatch.matchId, liveMatch.stageId)?.let { liveMatchDetails ->
+                    if (ScheduleService.saveScheduledMatchToFirebase(liveMatchDetails)) {
+                        liveMatchDetails
+                    } else null
+                }
+            } else null
+        }
+
+        val endResults = (liveResults.filterNotNull() + nonLiveMatches).distinctBy { it.matchId }
+
+        return if (saveResults.all { it } && liveResults.all { it != null }) endResults else emptyList()
     }
 }
+
+data class TestVal(
+    val name: String,
+    val status: MatchStatus,
+)

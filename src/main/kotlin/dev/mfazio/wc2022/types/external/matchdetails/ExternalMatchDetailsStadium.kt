@@ -1,12 +1,11 @@
-package dev.mfazio.wc2022.types.external.schedule
-
+package dev.mfazio.wc2022.types.external.matchdetails
 
 import dev.mfazio.wc2022.types.external.ExternalLocaleDescription
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ExternalStadium(
+data class ExternalMatchDetailsStadium(
     @SerialName("CityName")
     val cityName: List<ExternalLocaleDescription>,
     @SerialName("IdCity")

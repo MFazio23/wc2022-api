@@ -15,4 +15,7 @@ data class ScheduledMatch(
     val matchTime: String? = null,
     val homeScore: Int? = null,
     val awayScore: Int? = null,
-)
+    val winner: String? = null,
+) {
+    val matchTitle = "$awayTeam vs. $homeTeam"
+}

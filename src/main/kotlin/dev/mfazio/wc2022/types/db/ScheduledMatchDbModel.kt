@@ -20,6 +20,7 @@ data class ScheduledMatchDbModel(
     val homeScore: Int? = null,
     val awayScore: Int? = null,
     val matchTime: String? = null,
+    val winner: String? = null,
 ) {
 
     fun toScheduledMatch() = ScheduledMatch(
@@ -29,12 +30,13 @@ data class ScheduledMatchDbModel(
         awayTeam = awayTeam ?: "N/A",
         homeScore = homeScore,
         awayScore = awayScore,
-        matchTime = matchTime,
         matchStatus = MatchStatus.valueOfOrUnknown(matchStatus),
+        matchTime = matchTime,
         dateTime = LocalDateTime.parse(dateTime, matchDateTimeFormat),
         group = group,
         location = location,
         stadium = stadium,
+        winner = winner,
     )
 
     companion object {
@@ -45,12 +47,13 @@ data class ScheduledMatchDbModel(
             awayTeam = scheduledMatch.awayTeam,
             homeScore = scheduledMatch.homeScore,
             awayScore = scheduledMatch.awayScore,
-            matchTime = scheduledMatch.matchTime,
             matchStatus = scheduledMatch.matchStatus.name,
+            matchTime = scheduledMatch.matchTime,
             dateTime = scheduledMatch.dateTime.format(matchDateTimeFormat),
             group = scheduledMatch.group,
             location = scheduledMatch.location,
             stadium = scheduledMatch.stadium,
+            winner = scheduledMatch.winner,
         )
     }
 }

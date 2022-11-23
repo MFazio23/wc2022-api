@@ -11,9 +11,9 @@ data class ScheduledMatchApiModel(
     val dateTime: String,
     val group: String?,
     val matchStatus: MatchStatusApiModel,
+    val matchTime: String? = null,
     val homeScore: Int? = null,
     val awayScore: Int? = null,
-    val currentMinute: Int? = null,
 ) {
     companion object {
         fun fromScheduledMatch(scheduledMatch: ScheduledMatch) = ScheduledMatchApiModel(
@@ -22,6 +22,7 @@ data class ScheduledMatchApiModel(
             dateTime = scheduledMatch.dateTime.format(matchDateTimeFormat),
             group = scheduledMatch.group,
             matchStatus = MatchStatusApiModel.fromMatchStatus(scheduledMatch.matchStatus),
+            matchTime = scheduledMatch.matchTime,
             homeScore = scheduledMatch.homeScore,
             awayScore = scheduledMatch.awayScore,
         )

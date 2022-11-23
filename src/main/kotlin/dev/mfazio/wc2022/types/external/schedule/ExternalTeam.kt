@@ -1,6 +1,7 @@
 package dev.mfazio.wc2022.types.external.schedule
 
 
+import dev.mfazio.wc2022.types.external.ExternalLocaleDescription
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

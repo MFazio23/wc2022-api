@@ -2,6 +2,7 @@ package dev.mfazio.wc2022.types.external.schedule
 
 
 import dev.mfazio.wc2022.types.domain.MatchStatus
+import dev.mfazio.wc2022.types.external.ExternalLocaleDescription
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -51,6 +52,8 @@ data class ExternalResult(
     val stadium: ExternalStadium,
     @SerialName("StageName")
     val stageName: List<ExternalLocaleDescription>,
+    @SerialName("Winner")
+    val winner: String?,
 ) {
     val matchStatus: MatchStatus = when(matchStatusInt) {
         0 -> MatchStatus.Played

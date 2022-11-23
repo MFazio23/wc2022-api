@@ -6,7 +6,9 @@ import com.google.firebase.database.ValueEventListener
 import dev.mfazio.wc2022.URLs
 import dev.mfazio.wc2022.extensions.atEndOfDayUtc
 import dev.mfazio.wc2022.extensions.atStartOfDayUtc
+import dev.mfazio.wc2022.mapping.mapToScheduledMatch
 import dev.mfazio.wc2022.types.db.ScheduledMatchDbModel
+import dev.mfazio.wc2022.types.domain.MatchStatus
 import dev.mfazio.wc2022.types.domain.ScheduledMatch
 import dev.mfazio.wc2022.types.external.matchdetails.ExternalMatchDetails
 import dev.mfazio.wc2022.types.external.schedule.ExternalSchedule
@@ -42,10 +44,12 @@ object ScheduleService : ApiService() {
 
     suspend fun getScheduleFromDb(): Map<String, ScheduledMatchDbModel>? = getResultOrNull(FirebaseAdmin.getJsonUrlFromPath(URLs.firebaseScheduleUrl))
 
-    fun getScheduledMatchesForDate(localDate: LocalDate): List<ScheduledMatch> {
-        println("Schedz: [$scheduledMatches]")
-        return scheduledMatches.map { it.toScheduledMatch() }.filter { it.dateTime.toLocalDate() == localDate }
-    }
+    fun getScheduledMatchesForDate(localDate: LocalDate): List<ScheduledMatch> =
+        scheduledMatches.map { it.toScheduledMatch() }.filter { it.dateTime.toLocalDate() == localDate }
+
+    fun getCompletedMatches() = scheduledMatches.filter { it.matchStatus == MatchStatus.Played.name }.map { it.toScheduledMatch() }
+
+    suspend fun getMatchDetails(matchId: String, stageId: String): ScheduledMatch? = getExternalMatchDetailsForMatch(matchId, stageId)?.mapToScheduledMatch()
 
     suspend fun getExternalScheduleForDate(date: LocalDate): ExternalSchedule? = getResultOrNull(
         getExternalScheduleUrlForDate(date.atStartOfDayUtc(), date.atEndOfDayUtc())
