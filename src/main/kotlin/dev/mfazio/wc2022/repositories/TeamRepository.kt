@@ -9,7 +9,6 @@ import kotlin.random.Random
 
 object TeamRepository {
     fun updateTeamPoints(): Boolean {
-        //TODO: actually get the points.
         val completedMatches = ScheduleService.getCompletedMatches()
 
         val matchPoints = completedMatches.flatMap { match ->

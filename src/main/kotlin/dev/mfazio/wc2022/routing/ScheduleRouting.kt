@@ -16,6 +16,7 @@ fun Route.scheduleRouting() {
             call.respond(
                 APIResponse(
                     data = ScheduleRepository.getScheduledMatches()
+                        .map { ScheduledMatchApiModel.fromScheduledMatch(it) }
                 )
             )
         }

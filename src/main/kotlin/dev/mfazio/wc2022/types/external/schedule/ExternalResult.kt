@@ -10,6 +10,8 @@ import kotlinx.serialization.Serializable
 data class ExternalResult(
     @SerialName("Away")
     val away: ExternalTeam?,
+    @SerialName("AwayTeamPenaltyScore")
+    val awayPenaltyScore: Int?,
     @SerialName("AwayTeamScore")
     val awayScore: Int?,
     @SerialName("CompetitionName")
@@ -20,6 +22,8 @@ data class ExternalResult(
     val groupName: List<ExternalLocaleDescription>?,
     @SerialName("Home")
     val home: ExternalTeam?,
+    @SerialName("HomeTeamPenaltyScore")
+    val homePenaltyScore: Int?,
     @SerialName("HomeTeamScore")
     val homeScore: Int?,
     @SerialName("IdCompetition")

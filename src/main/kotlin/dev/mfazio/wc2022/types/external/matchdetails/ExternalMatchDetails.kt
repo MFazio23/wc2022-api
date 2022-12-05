@@ -11,17 +11,17 @@ data class ExternalMatchDetails(
     @SerialName("AwayTeam")
     val awayTeam: ExternalMatchDetailsTeam,
     @SerialName("AwayTeamPenaltyScore")
-    val awayTeamPenaltyScore: Int,
+    val awayTeamPenaltyScore: Int? = null,
     @SerialName("Date")
     val date: String,
     @SerialName("HomeTeam")
     val homeTeam: ExternalMatchDetailsTeam,
     @SerialName("HomeTeamPenaltyScore")
-    val homeTeamPenaltyScore: Int,
+    val homeTeamPenaltyScore: Int? = null,
     @SerialName("IdCompetition")
     val idCompetition: String,
     @SerialName("IdGroup")
-    val idGroup: String,
+    val idGroup: String?,
     @SerialName("IdMatch")
     val idMatch: String,
     @SerialName("IdSeason")

@@ -23,6 +23,8 @@ fun Map<String, ScheduledMatchDbModel>.mapToScheduledMatches() = this.map { (mat
         matchStatus = MatchStatus.valueOfOrUnknown(dbMatch.matchStatus),
         homeScore = dbMatch.homeScore,
         awayScore = dbMatch.awayScore,
+        homePenaltyScore = dbMatch.homePenaltyScore,
+        awayPenaltyScore = dbMatch.awayPenaltyScore,
         matchTime = dbMatch.matchTime,
     )
 }.sortedBy { it.dateTime }
@@ -37,6 +39,8 @@ fun ExternalResult.mapToScheduledMatches() = ScheduledMatch(
     awayTeam = this.away?.idCountry ?: this.placeHolderB,
     homeScore = this.homeScore,
     awayScore = this.awayScore,
+    homePenaltyScore = this.homePenaltyScore,
+    awayPenaltyScore = this.awayPenaltyScore,
     dateTime = LocalDateTime.parse(this.dateTime, matchDateTimeFormat),
     group = this.groupName?.value()?.removePrefix("Group ").orEmpty(),
     location = this.stadium.cityName.value().orEmpty(),
@@ -58,6 +62,8 @@ fun ExternalMatchDetails.mapToScheduledMatch() = ScheduledMatch(
     awayTeam = this.awayTeam.idCountry,
     homeScore = this.homeTeam.score,
     awayScore = this.awayTeam.score,
+    homePenaltyScore = this.homeTeamPenaltyScore,
+    awayPenaltyScore = this.awayTeamPenaltyScore,
     dateTime = LocalDateTime.parse(this.date, matchDateTimeFormat),
     group = this.groupName.value()?.removePrefix("Group ").orEmpty(),
     location = this.stadium.cityName.value().orEmpty(),

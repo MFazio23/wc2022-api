@@ -14,6 +14,8 @@ data class ScheduledMatchApiModel(
     val matchTime: String? = null,
     val homeScore: Int? = null,
     val awayScore: Int? = null,
+    val homePenaltyScore: Int? = null,
+    val awayPenaltyScore: Int? = null,
 ) {
     companion object {
         fun fromScheduledMatch(scheduledMatch: ScheduledMatch) = ScheduledMatchApiModel(
@@ -25,6 +27,8 @@ data class ScheduledMatchApiModel(
             matchTime = scheduledMatch.matchTime,
             homeScore = scheduledMatch.homeScore,
             awayScore = scheduledMatch.awayScore,
+            homePenaltyScore = scheduledMatch.homePenaltyScore,
+            awayPenaltyScore = scheduledMatch.awayPenaltyScore,
         )
     }
 }
