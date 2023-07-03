@@ -9,9 +9,10 @@ val logbackVersion: String by project
 plugins {
     application
     id("war")
-    kotlin("jvm") version "1.7.10"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.10"
+    kotlin("jvm") version "1.8.22"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.22"
     id("org.gretty") version "3.0.6"
+    id("io.ktor.plugin") version "2.3.2"
 }
 
 group = "dev.mfazio.wwc2023"
@@ -32,26 +33,33 @@ repositories {
 
 dependencies {
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
+
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
+
     implementation("com.github.MFazio23:fazio-utils-jvm:$fazioUtilsVersion")
+
     implementation("de.sharpmind.ktor:ktor-env-config:$ktorEnvConfigVersion")
+
+    implementation("io.ktor:ktor-client-cio-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-    implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
+
     implementation("io.ktor:ktor-server-auth-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-compression-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-cors-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-host-common-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-metrics-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-resources-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-servlet-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-tomcat-jvm:$ktorVersion")
+
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$kotlinxCoroutinesVersion")
-    implementation("io.ktor:ktor-client-core-jvm:2.1.2")
-    implementation("io.ktor:ktor-client-cio-jvm:2.1.2")
-    implementation("io.ktor:ktor-server-servlet-jvm:2.1.2")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
