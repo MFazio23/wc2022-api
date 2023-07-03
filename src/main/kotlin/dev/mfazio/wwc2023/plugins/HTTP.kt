@@ -14,6 +14,10 @@ fun Application.configureHTTP() {
         allowMethod(HttpMethod.Patch)
         allowHeader(HttpHeaders.Authorization)
         allowHost("localhost:3000")
-        allowHost(host = "mfazio.dev", schemes = listOf("https"), subDomains = listOf("wc2022", "wc2022-staging"))
+        allowHost(
+            host = "mfazio.dev",
+            schemes = listOf("https"),
+            subDomains = listOf("wc2022", "wc2022-staging", "wwc2023", "wwc2023-staging")
+        )
     }
 }

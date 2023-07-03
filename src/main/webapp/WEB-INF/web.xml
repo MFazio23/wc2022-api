@@ -5,8 +5,8 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
     <servlet>
-        <display-name>wc2022-api</display-name>
-        <servlet-name>wc2022-api</servlet-name>
+        <display-name>wwc2023-api</display-name>
+        <servlet-name>wwc2023-api</servlet-name>
         <servlet-class>io.ktor.server.servlet.ServletApplicationEngine</servlet-class>
         <init-param>
             <param-name>io.ktor.ktor.config</param-name>
@@ -16,7 +16,7 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>wc2022-api</servlet-name>
+        <servlet-name>wwc2023-api</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 </web-app>
