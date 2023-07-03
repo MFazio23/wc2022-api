@@ -1,1 +1,1 @@
-rootProject.name = "wc2022-api"
+rootProject.name = "wwc2023-api"

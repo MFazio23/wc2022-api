@@ -14,11 +14,11 @@ plugins {
     id("org.gretty") version "3.0.6"
 }
 
-group = "dev.mfazio.wc2022"
-version = "0.0.1"
+group = "dev.mfazio.wwc2023"
+version = "1.0.0"
 
 application {
-    mainClass.set("dev.mfazio.wc2022.ApplicationKt")
+    mainClass.set("dev.mfazio.wwc2023.ApplicationKt")
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")

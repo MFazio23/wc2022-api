@@ -1,0 +1,59 @@
+package dev.mfazio.wwc2023.routing
+
+import dev.mfazio.wwc2023.extensions.badRequest
+import dev.mfazio.wwc2023.extensions.ok
+import dev.mfazio.wwc2023.repositories.ScheduleRepository
+import dev.mfazio.wwc2023.types.api.ScheduledMatchApiModel
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+fun Route.scheduleRouting() {
+    route("schedule") {
+        get {
+            call.respond(
+                APIResponse(
+                    data = ScheduleRepository.getScheduledMatches()
+                        .map { ScheduledMatchApiModel.fromScheduledMatch(it) }
+                )
+            )
+        }
+        put {
+            val dateString = call.parameters["date"]
+            val date =
+                if (dateString != null) {
+                    LocalDate.parse(call.parameters["date"], DateTimeFormatter.ISO_LOCAL_DATE)
+                } else LocalDate.now()
+            val scheduledMatches = ScheduleRepository.updateScheduleForDate(date)
+
+            if (scheduledMatches.none()) return@put call.badRequest("Matches not found.")
+
+            call.ok(scheduledMatches.map(ScheduledMatchApiModel.Companion::fromScheduledMatch))
+        }
+        route("{date}") {
+            get {
+                val date = LocalDate.parse(call.parameters["date"], DateTimeFormatter.ISO_LOCAL_DATE)
+                val scheduledMatches = ScheduleRepository.getScheduledMatchesForDate(date)
+                call.respond(
+                    APIResponse(
+                        data = scheduledMatches.map(ScheduledMatchApiModel.Companion::fromScheduledMatch)
+                    )
+                )
+            }
+            put {
+                val date = LocalDate.parse(call.parameters["date"], DateTimeFormatter.ISO_LOCAL_DATE)
+                val scheduledMatches = ScheduleRepository.updateScheduleForDate(date)
+
+                if (scheduledMatches.none()) return@put call.badRequest("Matches not found.")
+
+                call.ok(scheduledMatches.map(ScheduledMatchApiModel.Companion::fromScheduledMatch))
+            }
+        }
+        put("/all") {
+            val schedule = ScheduleRepository.updateSchedule()
+            call.respond(schedule.map(ScheduledMatchApiModel.Companion::fromScheduledMatch).sortedBy { it.dateTime })
+        }
+    }
+}
