@@ -11,7 +11,7 @@ sealed class Team(
     object Australia : Team("AUS", "Australia", "AU", "B")
     object Brazil : Team("BRA", "Brazil", "BR", "F")
     object Canada : Team("CAN", "Canada", "CA", "B")
-    object ChinaPR : Team("CHN", "China PR", "CN", "D")
+    object China : Team("CHN", "China PR", "CN", "D")
     object Colombia : Team("COL", "Colombia", "CO", "H")
     object CostaRica : Team("CRC", "Costa Rica", "CR", "C")
     object Denmark : Team("DEN", "Denmark", "DK", "D")
@@ -28,10 +28,10 @@ sealed class Team(
     object NewZealand : Team("NZL", "New Zealand", "NZ", "A")
     object Nigeria : Team("NGA", "Nigeria", "NG", "B")
     object Norway : Team("NOR", "Norway", "NO", "A")
-    object Panama : Team("null", "Panama", "PA", "F")
+    object Panama : Team("PAN", "Panama", "PA", "F")
     object Philippines : Team("PHI", "Philippines", "PH", "A")
     object Portugal : Team("POR", "Portugal", "PT", "E")
-    object RepublicOfIreland : Team("IRL", "Republic of Ireland", "IE", "B")
+    object Ireland : Team("IRL", "Ireland", "IE", "B")
     object SouthAfrica : Team("RSA", "South Africa", "ZA", "G")
     object Spain : Team("ESP", "Spain", "ES", "C")
     object Sweden : Team("SWE", "Sweden", "SE", "G")
@@ -46,7 +46,7 @@ sealed class Team(
             Australia,
             Brazil,
             Canada,
-            ChinaPR,
+            China,
             Colombia,
             CostaRica,
             Denmark,
@@ -66,7 +66,7 @@ sealed class Team(
             Panama,
             Philippines,
             Portugal,
-            RepublicOfIreland,
+            Ireland,
             SouthAfrica,
             Spain,
             Sweden,
