@@ -4,7 +4,6 @@ import de.sharpmind.ktor.EnvConfig
 
 object URLs {
     const val fifaRankingsUrl = "https://www.fifa.com/api/ranking-overview?locale=en&dateId=id13687"
-    const val eloRankingsUrl = "https://www.eloratings.net/2022_World_Cup.tsv?_={timestamp}"
     const val scheduleUrl =
         "https://api.fifa.com/api/v3/calendar/matches?from={startDateTime}&to={endDateTime}&language=en&count=4&idCompetition=17"
     const val matchDetailsUrl =

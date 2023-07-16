@@ -12,10 +12,6 @@ object RankingsService : ApiService() {
 
     suspend fun getFIFARankings(): ExternalTeamRankings? = getResultOrNull(URLs.fifaRankingsUrl)
 
-    suspend fun getELORankings(): String? = getResultOrNull(getELORankingsUrl())
-
-    private fun getELORankingsUrl() = URLs.eloRankingsUrl.replace("{timestamp}", LocalDateTime.now().toEpochSecond(ZoneOffset.UTC).toString())
-
     fun saveRankingsToFirebase(rankedTeams: List<RankedTeam>) {
         FirebaseAdmin.db
             .getReference("/rankings")

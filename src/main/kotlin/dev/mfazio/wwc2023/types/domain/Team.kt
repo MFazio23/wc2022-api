@@ -3,7 +3,7 @@ package dev.mfazio.wwc2023.types.domain
 sealed class Team(
     val teamId: String,
     val teamName: String,
-    val eloCode: String,
+    val shortCode: String,
     val group: String,
     val altIds: List<String> = listOf(teamId)
 ) {
