@@ -8,8 +8,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 object ScheduleRepository {
-    private const val startDateString = "2022-11-20"
-    private const val endDateString = "2022-12-20"
+    private const val startDateString = "2023-07-19"
+    private const val endDateString = "2023-08-21"
 
     private val startDate = LocalDate.parse(startDateString, DateTimeFormatter.ISO_LOCAL_DATE)
     private val endDate = LocalDate.parse(endDateString, DateTimeFormatter.ISO_LOCAL_DATE)

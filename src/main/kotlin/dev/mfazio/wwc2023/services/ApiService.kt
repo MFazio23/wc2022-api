@@ -15,6 +15,7 @@ open class ApiService {
             json(
                 Json {
                     ignoreUnknownKeys = true
+                    coerceInputValues = true
                 }
             )
         }

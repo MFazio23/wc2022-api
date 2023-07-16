@@ -35,8 +35,8 @@ fun ExternalSchedule.mapToScheduledMatches() =
 fun ExternalResult.mapToScheduledMatches() = ScheduledMatch(
     matchId = this.idMatch,
     stageId = this.idStage,
-    homeTeam = this.home?.idCountry ?: this.placeHolderA,
-    awayTeam = this.away?.idCountry ?: this.placeHolderB,
+    homeTeam = this.home?.idCountry ?: this.home?.abbreviation ?: this.placeHolderA,
+    awayTeam = this.away?.idCountry ?: this.away?.abbreviation ?: this.placeHolderB,
     homeScore = this.homeScore,
     awayScore = this.awayScore,
     homePenaltyScore = this.homePenaltyScore,
@@ -49,8 +49,8 @@ fun ExternalResult.mapToScheduledMatches() = ScheduledMatch(
     matchTime = this.matchTime,
     winner = when (this.winner) {
         null -> null
-        this.home?.idTeam -> this.home.idCountry
-        this.away?.idTeam -> this.away.idCountry
+        this.home?.idTeam -> this.home.idCountry ?: this.home.abbreviation
+        this.away?.idTeam -> this.away.idCountry ?: this.away.abbreviation
         else -> null
     },
 )
@@ -58,8 +58,8 @@ fun ExternalResult.mapToScheduledMatches() = ScheduledMatch(
 fun ExternalMatchDetails.mapToScheduledMatch() = ScheduledMatch(
     matchId = this.idMatch,
     stageId = this.idStage,
-    homeTeam = this.homeTeam.idCountry,
-    awayTeam = this.awayTeam.idCountry,
+    homeTeam = this.homeTeam.idCountry ?: this.homeTeam.abbreviation,
+    awayTeam = this.awayTeam.idCountry ?: this.awayTeam.abbreviation,
     homeScore = this.homeTeam.score,
     awayScore = this.awayTeam.score,
     homePenaltyScore = this.homeTeamPenaltyScore,

@@ -9,7 +9,7 @@ data class ExternalMatchDetailsTeam(
     @SerialName("Abbreviation")
     val abbreviation: String,
     @SerialName("IdCountry")
-    val idCountry: String,
+    val idCountry: String?,
     @SerialName("IdTeam")
     val idTeam: String,
     @SerialName("Score")
