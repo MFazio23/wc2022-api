@@ -32,7 +32,6 @@ fun Map<String, RankedTeamDbModel>.mapToRankedTeams(): List<RankedTeam> = Team.a
         RankedTeam(
             team = team,
             fifaRanking = Ranking(dbRankingItem.fifa),
-            eloRanking = Ranking(dbRankingItem.elo),
         )
     } else null
 }.sortedBy { it.fifaRanking?.ranking }
