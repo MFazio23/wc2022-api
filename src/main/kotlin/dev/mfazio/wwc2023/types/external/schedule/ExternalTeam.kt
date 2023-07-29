@@ -12,7 +12,7 @@ data class ExternalTeam(
     @SerialName("IdAssociation")
     val idAssociation: String,
     @SerialName("IdCountry")
-    val idCountry: String,
+    val idCountry: String?,
     @SerialName("IdTeam")
     val idTeam: String,
     @SerialName("ShortClubName")
