@@ -2,14 +2,15 @@ package dev.mfazio.wwc2023.repositories
 
 import dev.mfazio.wwc2023.services.ScheduleService
 import dev.mfazio.wwc2023.services.TeamService
+import dev.mfazio.wwc2023.types.domain.ScheduledMatch
 import dev.mfazio.wwc2023.types.domain.Team
 import dev.mfazio.wwc2023.types.domain.TeamWithPoints
 
 object TeamRepository {
-    fun updateTeamPoints(): Boolean {
-        val completedMatches = ScheduleService.getCompletedMatches()
+    fun getTeamsWithPoints(completedMatches: List<ScheduledMatch>? = null): Map<String, TeamWithPoints> {
+        val matches = completedMatches ?: ScheduleService.getCompletedMatches()
 
-        val matchPoints = completedMatches.flatMap { match ->
+        val matchPoints = matches.flatMap { match ->
             listOf(
                 Team.getTeamById(match.homeTeam)?.let { team ->
                     TeamWithPoints(
@@ -38,7 +39,7 @@ object TeamRepository {
             )
         }.filterNotNull()
 
-        val teamsWithPoints = Team.allTeams.associate { team ->
+        return Team.allTeams.associate { team ->
             team.teamId to matchPoints.filter { it.team == team}.fold(TeamWithPoints(team)) { total, points ->
                 TeamWithPoints(
                     team = team,
@@ -53,6 +54,9 @@ object TeamRepository {
                 )
             }
         }
+    }
+    fun updateTeamPoints(): Boolean {
+        val teamsWithPoints = getTeamsWithPoints()
 
         return TeamService.saveTeamPoints(teamsWithPoints)
     }

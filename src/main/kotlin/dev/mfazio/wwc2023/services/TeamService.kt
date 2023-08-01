@@ -32,7 +32,9 @@ object TeamService {
 
     fun saveTeamPoints(teamsWithPoints: Map<String, TeamWithPoints>): Boolean {
         val dbTeamsWithPoints =
-            teamsWithPoints.mapValues { (_, teamWithPoints) -> TeamWithPointsDbModel.fromTeamWithPoints(teamWithPoints) }
+            teamsWithPoints.mapValues { (_, teamWithPoints) ->
+                TeamWithPointsDbModel.fromTeamWithPoints(teamWithPoints)
+            }
 
         return try {
             FirebaseAdmin.db

@@ -26,6 +26,7 @@ fun Application.configureRouting() {
         partyRouting()
         rankingsRouting()
         scheduleRouting()
+        standingsRouting()
         teamsRouting()
         get("status") {
             call.ok(
