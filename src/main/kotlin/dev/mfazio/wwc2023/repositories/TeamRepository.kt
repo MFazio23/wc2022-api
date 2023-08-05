@@ -16,7 +16,7 @@ object TeamRepository {
                     TeamWithPoints(
                         team = team,
                         wins = if (match.winner == team.teamId) 1 else 0,
-                        losses = if (match.winner == team.teamId) 0 else 1,
+                        losses = if (match.homeScore != match.awayScore && match.winner != team.teamId) 1 else 0,
                         ties = if (match.homeScore == match.awayScore) 1 else 0,
                         goalsFor = match.homeScore ?: 0,
                         goalsAgainst = match.awayScore ?: 0,
@@ -28,7 +28,7 @@ object TeamRepository {
                     TeamWithPoints(
                         team = team,
                         wins = if (match.winner == team.teamId) 1 else 0,
-                        losses = if (match.winner == team.teamId) 0 else 1,
+                        losses = if (match.homeScore != match.awayScore && match.winner != team.teamId) 1 else 0,
                         ties = if (match.homeScore == match.awayScore) 1 else 0,
                         goalsFor = match.awayScore ?: 0,
                         goalsAgainst = match.homeScore ?: 0,
